@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>真道書院小一人文科溫習大冒險</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts for Playful and Readable text -->
+  <link href="https://fonts.googleapis.com/css2?family=Chilanka&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <!-- FontAwesome for cute icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Canvas Confetti for winning effect -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Noto Sans TC', sans-serif;
+      /* 溫和可愛的粉彩馬卡龍漸變背景 */
+      background: linear-gradient(135deg, #FFFDF5 0%, #F4FDF7 50%, #F0F9FF 100%);
+    }
+    .playful-title {
+      font-family: 'Chilanka', 'Noto Sans TC', sans-serif;
+      font-weight: 900;
+    }
+    
+    /* 改用柔和粉彩卡片陰影與無黑邊的溫和設計 */
+    .soft-card-shadow {
+      box-shadow: 0 10px 25px -5px rgba(148, 163, 184, 0.15), 0 8px 16px -6px rgba(148, 163, 184, 0.1);
+    }
+    .soft-feedback-shadow {
+      box-shadow: inset 0px 4px 6px rgba(0, 0, 0, 0.02);
+    }
+
+    /* 溫和的漂浮動畫（用於裝飾雲朵與博士） */
+    @keyframes gentle-float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    .animate-float {
+      animation: gentle-float 4s ease-in-out infinite;
+    }
+
+    /* 卡片雙面翻轉效果（全面移除粗黑邊框） */
+    .flip-card {
+      background-color: transparent;
+      perspective: 1000px;
+    }
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+    .flip-card.flipped .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+    .flip-card-front, .flip-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+    .flip-card-back {
+      transform: rotateY(180deg);
+    }
+
+    /* 搖晃動畫（用於答錯時） */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
+    .animate-shake {
+      animation: shake 0.3s ease-in-out;
+      animation-iteration-count: 2;
+    }
+
+    /* 拼圖形狀模擬（改用粉嫩色彩連接點，捨棄粗黑邊） */
+    .puzzle-left {
+      position: relative;
+      border-top-right-radius: 0px;
+      border-bottom-right-radius: 0px;
+    }
+    .puzzle-left::after {
+      content: '';
+      position: absolute;
+      right: -10px;
+      top: calc(50% - 10px);
+      width: 20px;
+      height: 20px;
+      background: inherit;
+      border: 2px solid #e2e8f0;
+      border-left: none;
+      border-radius: 50%;
+      z-index: 10;
+    }
+    .puzzle-right {
+      position: relative;
+      border-top-left-radius: 0px;
+      border-bottom-left-radius: 0px;
+    }
+    .puzzle-right::before {
+      content: '';
+      position: absolute;
+      left: -10px;
+      top: calc(50% - 10px);
+      width: 20px;
+      height: 20px;
+      background: #ffffff; /* 凹陷孔洞背景 */
+      border: 2px solid #e2e8f0;
+      border-right: none;
+      border-radius: 50%;
+      z-index: 10;
+      box-shadow: inset 2px 0px 4px rgba(0,0,0,0.04);
+      transition: background 0.2s;
+    }
+    .puzzle-right.puzzle-active::before {
+      background: #ffe4e6;
+    }
+    .puzzle-right.puzzle-matched::before {
+      background: #f0fdf4;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between text-slate-700">
+
+  <header class="bg-white border-b border-slate-100 p-4 shadow-sm text-slate-800">
+    <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <span class="text-4xl animate-float select-none">🎈</span>
+        <div>
+          <h1 class="text-2xl font-black playful-title tracking-wider text-sky-600 flex items-center gap-2">
+            真道人文大冒險 <span class="text-xl">⭐</span>
+          </h1>
+          <p class="text-xs font-bold text-slate-400">第二次總結性評估（單元三、四、五）溫習</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2 bg-amber-50 border border-amber-200 px-4 py-1.5 rounded-full text-sm font-black shadow-sm">
+          <span class="text-lg">🏆</span>
+          <span class="text-amber-800">積木得分：<span id="score-display" class="text-base text-rose-500">0</span> 分</span>
+        </div>
+        <button onclick="toggleAudioMute()" id="mute-btn" class="bg-slate-50 hover:bg-slate-100 border border-slate-200 p-2.5 rounded-full transition text-sm" title="靜音切換">
+          <i id="mute-icon" class="fa-solid fa-volume-high text-slate-600"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主要學習區域 -->
+  <main class="max-w-4xl w-full mx-auto p-4 flex-grow flex flex-col gap-4">
+    
+    <!-- 貓頭鷹博士小對話盒：無粗黑邊，柔和溫暖 -->
+    <div id="helper-box" class="bg-amber-50 border border-amber-200 rounded-3xl p-5 soft-card-shadow flex items-start gap-4 transition-all duration-300 transform">
+      <div class="text-5xl shrink-0 select-none animate-float" id="helper-owl-emoji">🦉</div>
+      <div class="flex-grow">
+        <div class="flex items-center gap-2 flex-wrap mb-1">
+          <span class="font-black text-amber-800 text-lg playful-title">貓頭鷹博士 Dr. Owl</span>
+          <button onclick="speakCurrentTip()" class="bg-amber-400 hover:bg-amber-500 active:scale-95 text-amber-950 text-xs px-3.5 py-1.5 rounded-full flex items-center gap-1.5 transition font-black shadow-sm">
+            <i class="fa-solid fa-volume-high"></i> 聽讀廣東話
+          </button>
+        </div>
+        <p id="helper-text" class="text-amber-900/80 font-bold text-base leading-relaxed">
+          哈囉！我是貓頭鷹博士！準備好跟我一起挑戰單元三至五的人文科重要概念嗎？點擊下面的按鈕，選擇你想挑戰的關卡吧！
+        </p>
+      </div>
+    </div>
+
+    <!-- 導航切換：改用極其柔和且精緻的粉色系無邊框卡片 -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3.5">
+      <button onclick="switchTab('flashcard')" id="nav-flashcard" class="tab-btn hover:scale-[1.02] bg-white text-slate-700 font-black p-4 rounded-3xl border border-slate-100 soft-card-shadow flex flex-col items-center gap-1.5 transition-all">
+        <span class="text-3xl animate-pulse">💡</span>
+        <span class="text-sm">知識閃卡</span>
+      </button>
+      <button onclick="switchTab('quiz-fill')" id="nav-quiz-fill" class="tab-btn hover:scale-[1.02] bg-white text-slate-700 font-black p-4 rounded-3xl border border-slate-100 soft-card-shadow flex flex-col items-center gap-1.5 transition-all">
+        <span class="text-3xl animate-pulse">📝</span>
+        <span class="text-sm">供詞填充</span>
+      </button>
+      <button onclick="switchTab('quiz-tf')" id="nav-quiz-tf" class="tab-btn hover:scale-[1.02] bg-white text-slate-700 font-black p-4 rounded-3xl border border-slate-100 soft-card-shadow flex flex-col items-center gap-1.5 transition-all">
+        <span class="text-3xl animate-pulse">❓</span>
+        <span class="text-sm">是非挑戰</span>
+      </button>
+      <button onclick="switchTab('quiz-match')" id="nav-quiz-match" class="tab-btn hover:scale-[1.02] bg-white text-slate-700 font-black p-4 rounded-3xl border border-slate-100 soft-card-shadow flex flex-col items-center gap-1.5 transition-all">
+        <span class="text-3xl animate-pulse">🧩</span>
+        <span class="text-sm">趣味配對</span>
+      </button>
+    </div>
+
+    <!-- 核心工作卡片區（無黑邊、高雅圓角軟陰影） -->
+    <div class="bg-white rounded-3xl p-6 border border-slate-100 soft-card-shadow flex-grow min-h-[440px] flex flex-col justify-between">
+      
+      <!-- 模式一：知識閃卡 -->
+      <div id="tab-flashcard" class="tab-content hidden flex-col justify-between h-full gap-4">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="text-2xl font-black text-indigo-600 flex items-center gap-2 playful-title">
+              <span>💡</span> 核心詞彙知識閃卡
+            </h2>
+            <span class="text-sm bg-indigo-50 text-indigo-600 border border-indigo-100 px-3 py-1 rounded-full font-black" id="flashcard-progress">1 / 10</span>
+          </div>
+          <p class="text-xs text-slate-400 mb-4 font-bold">點擊卡片可以翻看解釋或圖片，按下方按鈕切換下一張卡片。</p>
+
+          <!-- 翻轉卡片主體（改為精緻圓滑無黑框風格） -->
+          <div class="flex justify-center my-4">
+            <div onclick="toggleFlashcard()" class="flip-card w-full max-w-sm h-72 cursor-pointer" id="flashcard-element">
+              <div class="flip-card-inner h-full rounded-3xl soft-card-shadow border border-slate-100">
+                <!-- 正面 -->
+                <div class="flip-card-front bg-gradient-to-br from-indigo-400 to-sky-400 text-white p-6 flex flex-col justify-between items-center rounded-3xl">
+                  <div class="text-right w-full">
+                    <span class="text-xs bg-indigo-500/55 text-white px-3 py-1 rounded-full font-black" id="fc-category">類別</span>
+                  </div>
+                  <div class="flex flex-col items-center gap-3">
+                    <div id="fc-icon" class="text-7xl animate-float">🧹</div>
+                    <h3 class="text-3xl font-black tracking-wide" id="fc-title">詞彙名稱</h3>
+                  </div>
+                  <span class="text-xs opacity-90 flex items-center gap-1 font-black"><i class="fa-solid fa-rotate animate-spin"></i> 點擊卡片翻看背面說明</span>
+                </div>
+                <!-- 背面 -->
+                <div class="flip-card-back bg-slate-50 text-slate-700 p-6 flex flex-col justify-between items-center rounded-3xl">
+                  <div class="text-right w-full">
+                    <span class="text-xs bg-amber-100 text-amber-800 px-3 py-1 rounded-full font-black">小筆記</span>
+                  </div>
+                  <div class="flex flex-col items-center gap-2 text-center flex-grow justify-center">
+                    <div id="fc-back-img" class="my-1">
+                      <!-- SVG 圖檔區域 -->
+                    </div>
+                    <p class="text-base font-black leading-relaxed text-slate-600" id="fc-desc">詳細解釋內容。</p>
+                  </div>
+                  <button onclick="speakFlashcardText(event)" class="bg-indigo-500 hover:bg-indigo-600 active:scale-95 text-white text-xs px-4 py-2 rounded-full flex items-center gap-1.5 transition font-black soft-card-shadow">
+                    <i class="fa-solid fa-volume-high"></i> 語音朗讀此卡
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 卡片控制器 -->
+        <div class="flex items-center justify-between mt-auto border-t border-slate-100 pt-4">
+          <button onclick="prevFlashcard()" class="bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-600 font-black px-4 py-2.5 rounded-2xl flex items-center gap-1 transition">
+            <i class="fa-solid fa-chevron-left"></i> 上一張
+          </button>
+          <button onclick="speakFlashcardTextSimple()" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-600 font-black px-4 py-2.5 rounded-2xl flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-volume-high"></i> 讀這個詞
+          </button>
+          <button onclick="nextFlashcard()" class="bg-indigo-500 hover:bg-indigo-600 text-white font-black px-4 py-2.5 rounded-2xl flex items-center gap-1 transition soft-card-shadow">
+            下一張 <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- 模式二：供詞填充 -->
+      <div id="tab-quiz-fill" class="tab-content hidden flex-col justify-between h-full gap-4">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="text-2xl font-black text-amber-600 flex items-center gap-2 playful-title">
+              <span>🧸</span> 供詞填充大挑戰（全範圍41題）
+            </h2>
+            <div class="flex items-center gap-2">
+              <span id="fill-level-badge" class="text-xs font-black bg-amber-100 text-amber-800 border border-amber-200 px-2.5 py-1 rounded-lg">第一關</span>
+              <span class="text-sm bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full font-black" id="fill-progress">1 / 41</span>
+            </div>
+          </div>
+          <p class="text-xs text-slate-400 mb-3 font-bold">請點選下方糖果色的詞語填入句子中，完成溫習大挑戰！</p>
+
+          <!-- 主題指示與發音 -->
+          <div class="bg-amber-50/50 p-3 rounded-2xl border border-amber-100 text-xs text-amber-800 font-black mb-4 flex items-center justify-between">
+            <span id="fill-topic" class="flex items-center gap-1"><span>💡</span> 主題：家居整潔思維導圖</span>
+            <button onclick="speakFillQuestion()" class="text-amber-700 hover:underline flex items-center gap-1 font-bold"><i class="fa-solid fa-volume-high"></i> 聽讀題目</button>
+          </div>
+
+          <!-- 填充主體區（紙卷溫和風格，完全無硬框） -->
+          <div class="bg-amber-50/30 border-2 border-amber-100 rounded-3xl p-6 my-4 text-xl font-black leading-loose text-slate-700 soft-feedback-shadow relative" id="fill-question-container">
+            <!-- 動態生成填充內容 -->
+          </div>
+
+          <!-- 候選池 -->
+          <div class="mt-6">
+            <p class="text-sm sm:text-base text-slate-500 mb-3.5 font-black uppercase tracking-wider flex items-center gap-1">
+              <span>🍬</span> 供詞選項（請點選正確答案）：
+            </p>
+            <div class="flex flex-wrap gap-4" id="fill-options-container">
+              <!-- 動態填充供詞按鈕 -->
+            </div>
+          </div>
+        </div>
+
+        <div id="fill-feedback-bar" class="hidden p-3 rounded-2xl text-center text-sm font-black my-2 soft-feedback-shadow"></div>
+
+        <div class="flex items-center justify-between mt-6 border-t border-slate-100 pt-4">
+          <button id="fill-check-btn" onclick="checkFillAnswer()" class="w-full bg-emerald-400 hover:bg-emerald-500 text-white font-black py-4 px-6 rounded-2xl soft-card-shadow flex items-center justify-center gap-2">
+            <span class="text-xl">✅</span> 檢查答案
+          </button>
+          <button id="fill-next-btn" onclick="nextFillQuestion()" class="hidden w-full bg-sky-400 hover:bg-sky-500 text-slate-800 font-black py-4 px-6 rounded-2xl soft-card-shadow flex items-center justify-center gap-2">
+            <span>下一題</span> <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- 模式三：是非挑戰 -->
+      <div id="tab-quiz-tf" class="tab-content hidden flex-col justify-between h-full gap-4">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="text-2xl font-black text-emerald-600 flex items-center gap-2 playful-title">
+              <span>❓</span> 是非智慧安全挑戰賽
+            </h2>
+            <span class="text-sm bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full font-black" id="tf-progress">1 / 6</span>
+          </div>
+          <p class="text-xs text-slate-400 mb-4 font-bold">小一常識題！判斷以下行為在生活中是「正確/安全」還是「錯誤/危險」！</p>
+
+          <!-- SVG 插圖展示區 -->
+          <div class="flex justify-center my-2" id="tf-visual-container">
+            <!-- 動態生成 SVG 示意圖 -->
+          </div>
+
+          <!-- 是非題題目文本（改為清新軟底色） -->
+          <div class="bg-emerald-50/50 p-5 rounded-2xl border border-emerald-100 text-lg font-bold text-slate-700 text-center my-4 leading-relaxed" id="tf-question-text">
+            <!-- 題目載入位置 -->
+          </div>
+        </div>
+
+        <div id="tf-feedback-bar" class="hidden p-3 rounded-2xl text-center text-sm font-black my-2 soft-feedback-shadow"></div>
+
+        <!-- 選擇按鈕（改成高質感粉彩大按鈕） -->
+        <div class="flex flex-col sm:flex-row gap-4 mt-4 border-t border-slate-100 pt-4">
+          <button onclick="submitTFAnswer(true)" class="flex-1 bg-emerald-400 hover:bg-emerald-500 text-white font-black py-4 px-6 rounded-2xl soft-card-shadow transition active:scale-95 flex flex-col items-center justify-center gap-1.5 text-lg">
+            <span class="text-4xl">⭕</span>
+            <span>正確 / 安全 / 需要</span>
+          </button>
+          <button onclick="submitTFAnswer(false)" class="flex-1 bg-rose-400 hover:bg-rose-500 text-white font-black py-4 px-6 rounded-2xl soft-card-shadow transition active:scale-95 flex flex-col items-center justify-center gap-1.5 text-lg">
+            <span class="text-4xl animate-shake">❌</span>
+            <span>錯誤 / 危險 / 不需要</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 模式四：趣味配對 -->
+      <div id="tab-quiz-match" class="tab-content hidden flex-col justify-between h-full gap-4">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="text-2xl font-black text-sky-600 flex items-center gap-2 playful-title">
+              <span>🧩</span> 拼圖連連看趣味配對
+            </h2>
+            <button onclick="resetMatching()" class="text-xs bg-slate-50 hover:bg-slate-100 px-3 py-1.5 rounded-lg text-slate-500 font-bold border border-slate-200 transition flex items-center gap-1 shadow-sm">
+              <i class="fa-solid fa-rotate-left"></i> 重新打亂
+            </button>
+          </div>
+          <p class="text-xs text-slate-400 mb-4 font-bold">請點選左邊凸起拼圖的「題目卡」，再點選右邊凹陷拼圖的「答案卡」進行合體拼裝！</p>
+
+          <!-- 拼圖排版配對面板 -->
+          <div class="grid grid-cols-2 gap-x-8 gap-y-3.5 my-4">
+            <!-- 左欄：題目拼圖 (凸出，採用無硬框、柔和粉藍與粉黃拼圖) -->
+            <div class="flex flex-col gap-3.5" id="match-left-column">
+              <!-- 動態凸拼圖按鈕 -->
+            </div>
+
+            <!-- 右欄：答案拼圖 (凹入) -->
+            <div class="flex flex-col gap-3.5" id="match-right-column">
+              <!-- 動態凹拼圖按鈕 -->
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-indigo-50/50 p-4 rounded-2xl text-center text-sm text-indigo-600 font-bold border border-indigo-100" id="match-feedback">
+          點擊左、右兩邊進行合體配對。
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- 頁腳 -->
+  <footer class="bg-white border-t border-slate-100 p-3 text-center text-xs text-slate-400">
+    <div class="max-w-4xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2 font-medium">
+      <span>香港華人基督教聯會真道書院 ｜ FS1 繽紛天地人文科第二次評估溫習教材</span>
+      <span class="text-amber-500 font-bold">💡 溫馨提醒：溫暖安樂窩，分工合作最快樂！</span>
+    </div>
+  </footer>
+
+  <script>
+    let fcIndex = 0;
+    let fillIndex = 0;
+    let tfIndex = 0;
+    let score = 0;
+    let currentTab = "flashcard";
+
+    // 配對邏輯狀態變數
+    let selectedLeftId = null;
+    let selectedRightId = null;
+    let matchedPairs = [];
+
+    // --- 音效模擬引擎 (Web Audio API) ---
+    let audioContext = null;
+    let isMuted = false;
+
+    function initAudio() {
+      if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function toggleAudioMute() {
+      isMuted = !isMuted;
+      const icon = document.getElementById("mute-icon");
+      if (isMuted) {
+        icon.className = "fa-solid fa-volume-xmark";
+        if (window.speechSynthesis) window.speechSynthesis.cancel();
+      } else {
+        icon.className = "fa-solid fa-volume-high";
+      }
+    }
+
+    function playSound(type) {
+      if (isMuted) return;
+      initAudio();
+      if (!audioContext) return;
+
+      const osc = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      osc.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      if (type === 'correct') {
+        osc.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+        gainNode.gain.setValueAtTime(0.08, audioContext.currentTime);
+        osc.start();
+        osc.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.12); // E5
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.35);
+        osc.stop(audioContext.currentTime + 0.4);
+      } else if (type === 'incorrect') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(180, audioContext.currentTime); 
+        osc.frequency.linearRampToValueAtTime(120, audioContext.currentTime + 0.25);
+        gainNode.gain.setValueAtTime(0.12, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+        osc.start();
+        osc.stop(audioContext.currentTime + 0.35);
+      }
+    }
+
+    // --- 廣東話語音朗讀系統 (SpeechSynthesis) ---
+    function speakText(text) {
+      if (isMuted || !window.speechSynthesis) return;
+      window.speechSynthesis.cancel();
+      
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "zh-HK"; 
+      utterance.rate = 0.95;    
+      utterance.pitch = 1.15;   
+      
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function speakCurrentTip() {
+      const helperText = document.getElementById("helper-text").innerText;
+      speakText(helperText);
+    }
+
+    // --- 貓頭鷹博士小貼士數據 ---
+    const OWL_TIPS = {
+      flashcard: [
+        "大掃除能去舊迎新！把霉運通通掃走，家裡乾淨、心情好！",
+        "香噴噴的年糕代表學業成績「步步高升」，我們今年也要努力喔！",
+        "端午節吃粽子、划龍舟，都是為了紀念偉大的愛國詩人屈原。",
+        "重陽登高是敬老和拜祭祖先的日子。上山掃墓，防火第一！",
+        "圓圓的月亮代表一家人團圓，中秋賞月吃月餅、柚子最溫暖！",
+        "復活節是外地傳來的節日，紀念耶穌在死後第三天復活，帶來希望！",
+        "聖誕節是十二月二十五日，慶祝救主耶穌誕生。大家會高興地唱詩歌！",
+        "五星紅旗是我們國家的象徵，看見升國旗時要注目、站好！",
+        "國徽包含齒輪和麥穗，天安門和國旗在最上方，代表我們莊嚴的祖國！",
+        "安全使用能源，遠離廚房和燙手物品。不輕易給陌生人開門！"
+      ],
+      "quiz-fill": [
+        "想一想，如廁後為了健康與乾淨，蓋上廁板後，我們需要做甚麼？",
+        "每天早上起床後，動手把被子收拾整齊，這叫整理甚麼？",
+        "遇到不認識的人來敲門，小一生千萬不可以自己動手做甚麼？",
+        "吃不完的剩餘食物，要包好放入哪一個冰涼的電器內儲存？",
+        "聖誕節紀念耶穌出生（降生），復活節紀念耶穌死而復生（復活）。",
+        "新年前全家人合力大掃除，把不用的舊物、髒物清理，象徵去舊迎新！",
+        "端午節我們看見一艘艘龍舟在江面上划動，這叫什麼舟？",
+        "重陽節拜祭祖先（掃墓），一定不可以用手去觸摸還沒熄滅的甚麼？",
+        "國徽上代表工業、有一齒一齒圖樣的輪子，叫做什麼輪？",
+        "在家如果不小心跌倒受傷，一定要第一時間找誰幫忙處理？"
+      ],
+      "quiz-tf": [
+        "第一題：在廚房內跟媽媽推撞，可能導致熱水打翻而嚴重燙傷，這絕對不可以喔！",
+        "第二題：如果家裡突然起火，絕對不可以躲進衣櫃，否則吸入濃煙會非常危險！",
+        "第三題：如果發生火警、受傷、或洩漏煤氣，應該在安全地方撥打哪個緊急求助電話？",
+        "第四題：稱呼要叫對：爸爸的姐姐或妹妹是姑母（姑姐），媽媽的才是姨母（阿姨）喔！",
+        "第五題：在莊嚴的升國旗奏國歌典禮時，大家一定要站直、不說話，注目肅立！",
+        "第六題：去山上掃墓，必須在確定所有火種完全熄滅才可以離開，保護大自然！"
+      ],
+      "quiz-match": [
+        "親戚長輩常往來。爸爸的父母叫「祖父祖母」，媽媽的父母叫「外祖父外祖母」喔！點擊左、右進行配對！"
+      ]
+    };
+
+    // --- 41題供詞填充數據（完全包含指定詞彙） ---
+    const FILL_QUESTIONS = [
+      {
+        text: "我們每天生活在一起，互相關心、互相愛護的親密成員，就是我們的 [家人] 。",
+        options: ["陌生人", "家人", "鄰居", "老師"],
+        topic: "我的親人 🏠",
+        level: "第一關",
+        tip: "與我們最親近、同住一個屋簷下的人是？"
+      },
+      {
+        text: "爸爸、媽媽、我和弟弟，都是我們家庭中不可缺少的重要 [成員] 。",
+        options: ["成員", "客人", "司機", "保姆"],
+        topic: "家庭結構 👨‍👩‍👧‍👦",
+        level: "第二關",
+        tip: "家庭裡的每一個人，都是家庭的？"
+      },
+      {
+        text: "週末時，我們一家人一起去郊野公園野餐、騎單車，這些都是有趣的 [家庭活動] 。",
+        options: ["課外活動", "學校活動", "家庭活動", "節日習俗"],
+        topic: "家庭生活片段 🚲",
+        level: "第三關",
+        tip: "全家人一起參與的休閒活動，叫什麼？"
+      },
+      {
+        text: "爺爺、嫲嫲、姑姐、舅父和阿姨，都是我們經常聯絡和見面的 [親戚] 。",
+        options: ["鄰居", "親戚", "陌生人", "同學"],
+        topic: "親戚關係常識 👵",
+        level: "第四關",
+        tip: "爸爸媽媽兩邊的家人和長輩，合稱為什麼？"
+      },
+      {
+        text: "為了減輕爸爸媽媽的辛勞，我們應該在客廳主動幫忙 [做家務] ，例如抹桌子。",
+        options: ["做功課", "做家務", "玩遊戲", "看電視"],
+        topic: "溫暖安樂窩 🧹",
+        level: "第五關",
+        tip: "掃地、抹桌子、疊被子等家裡的工作合稱為什麼？"
+      },
+      {
+        text: "每天主動掃地和保持物品擺放整齊，才能維持舒適美觀的 [家居整潔] 。",
+        options: ["家居整潔", "身體健康", "學校秩序", "環境污染"],
+        topic: "美化安樂窩 ✨",
+        level: "第六關",
+        tip: "家裡乾淨、東西收好，這代表我們做好了什麼？"
+      },
+      {
+        text: "玩完積木、玩偶和拼圖後，我們應當自己動手 [收拾玩具] ，不隨地亂丟。",
+        options: ["丟掉玩具", "收拾玩具", "購買玩具", "弄壞玩具"],
+        topic: "良好家居習慣 🧸",
+        level: "第七關",
+        tip: "玩耍過後，把遊戲用品放回原位的行為叫？"
+      },
+      {
+        text: "夏天天氣非常炎熱時，我們會開啟 [冷氣機] 降低室內溫度，但要注意節能。",
+        options: ["電視機", "冷氣機", "洗衣機", "暖風機"],
+        topic: "常用家用電器 ❄️",
+        level: "第八關",
+        tip: "掛在牆壁上吹出冷風、讓房間變涼爽的機器是？"
+      },
+      {
+        text: "骯髒的衣服要放進 [洗衣機] 裡清洗乾淨，千萬不要用濕手去觸摸插頭。",
+        options: ["洗衣機", "雪櫃", "微波爐", "電風扇"],
+        topic: "安全洗滌電器 👕",
+        level: "第九關",
+        tip: "幫全家人洗乾淨髒衣服的旋轉電器是？"
+      },
+      {
+        text: "吃不完或容易變壞的食物，我們應該用保鮮紙包好，放進 [雪櫃] 儲存。",
+        options: ["雪櫃", "焗爐", "電飯煲", "吸塵機"],
+        topic: "食物衛生管理 🍎",
+        level: "第十關",
+        tip: "廚房裡冷冰冰的、最適合儲存食物以防發霉的電器叫什麼？"
+      },
+      {
+        text: "飯前便後、以及擦完鼻涕後要用肥皂洗手，這能保持個人 [衞生] ，預防細菌。",
+        options: ["安全", "衞生", "禮貌", "秩序"],
+        topic: "家居衛生思維導圖 🧼",
+        level: "第十一關",
+        tip: "保持乾淨、預防生病，這叫注重個人什麼？"
+      },
+      {
+        text: "如廁後要記得先蓋上廁板，然後按按鈕 [沖廁] ，保持洗手間整潔。",
+        options: ["開門", "沖廁", "洗手", "刷牙"],
+        topic: "廁所清潔規範 🚽",
+        level: "第十二關",
+        tip: "大小便後，按按鈕把污物沖走，叫什麼？"
+      },
+      {
+        text: "我們不能在客廳或睡房亂丟果皮和廢紙，要把所有 [垃圾] 丟進垃圾桶裡。",
+        options: ["玩具", "垃圾", "衣服", "書本"],
+        topic: "家居環境保潔 🗑️",
+        level: "第十三關",
+        tip: "不要用的廢棄物、髒東西，我們稱為什麼？"
+      },
+      {
+        text: "遇到不會使用的電器或滾燙的物品，一定要請家中的 [成人] 幫忙，避免受傷。",
+        options: ["成人", "嬰兒", "寵物", "同學"],
+        topic: "預防家居意外 👨",
+        level: "第十四關",
+        tip: "小朋友不能單獨處理危險物品，要找爸爸媽媽或其他什麼？"
+      },
+      {
+        text: "獨自在廚房玩火或接觸鋒利小刀是非常 [危險] 的行為，絕對不可以做。",
+        options: ["安全", "簡單", "快樂", "危險"],
+        topic: "認識危機情況 ⚡",
+        level: "第十五關",
+        tip: "容易讓身體嚴重受傷、流血的事情，都是非常？"
+      },
+      {
+        text: "家裡的地板如果有水，容易讓人滑倒受傷，我們要立刻擦乾以防發生 [意外] 。",
+        options: ["意外", "驚喜", "遊戲", "禮物"],
+        topic: "家居安全調查 🩹",
+        level: "第十六關",
+        tip: "意想不到、會讓人受傷的壞事，叫做發生什麼？"
+      },
+      {
+        text: "我們絕對不能用濕潤的手去觸摸或拔掉電器的插頭，否則會很容易 [觸電] 。",
+        options: ["跌傷", "觸電", "燙傷", "夾傷"],
+        topic: "安全用電守則 🔌",
+        level: "第十七關",
+        tip: "電流穿過人體，造成嚴重受傷甚至生命危險，叫？"
+      },
+      {
+        text: "在沙發或床上跳來跳去非常不安全，容易摔倒地上而 [跌傷] 身體。",
+        options: ["跌傷", "中暑", "傷風", "蛀牙"],
+        topic: "客廳安全防護 🛏️",
+        level: "第十八關",
+        tip: "從高處摔下、跌倒，導致手腳受傷，叫？"
+      },
+      {
+        text: "在狹窄的客廳裡追逐奔跑，容易撞到堅硬的桌角，導致身體 [撞傷] 淤青。",
+        options: ["撞傷", "凍傷", "割傷", "燙傷"],
+        topic: "客廳安全防護 🛋️",
+        level: "第十九關",
+        tip: "身體大力碰擊到硬物，皮膚變得又紅又青，叫？"
+      },
+      {
+        text: "開關房門、櫃門或抽屜時要慢慢來，小心手指被門縫 [夾傷] 。",
+        options: ["燙傷", "夾傷", "咬傷", "曬傷"],
+        topic: "房門安全教育 🚪",
+        level: "第二十關",
+        tip: "手指或身體卡在窄縫裡受擠壓，痛得流淚，這叫？"
+      },
+      {
+        text: "媽媽正在 [廚房] 裡用明火煮滾水和炒菜，小朋友千萬不要在那裡追逐遊玩。",
+        options: ["書房", "睡房", "廚房", "浴室"],
+        topic: "家居安全高危區 🍳",
+        level: "第二十一關",
+        tip: "家裡烹飪食物、有爐火和滾水的高危地方是？"
+      },
+      {
+        text: "電風扇、微波爐和洗衣機都是家裡常見的 [電器] ，使用時要注意用電安全。",
+        options: ["玩具", "家具", "電器", "衣服"],
+        topic: "家庭電器安全 ⚡",
+        level: "第二十二關",
+        tip: "需要接通電力才能運作的家用機器，合稱為什麼？"
+      },
+      {
+        text: "只有你一個人在家時，若遇到 [陌生人] 敲門或按門鈴，絕對不能擅自開門。",
+        options: ["親戚", "爸爸", "陌生人", "老師"],
+        topic: "安全自保守則 👤",
+        level: "第二十三關",
+        tip: "完全不認識、沒見過面的外人，我們稱為什麼？"
+      },
+      {
+        text: "農曆新年時，我們會吃美味的 [年糕] ，寓意著學業和身體「步步高升」。",
+        options: ["月餅", "粽子", "年糕", "湯圓"],
+        topic: "傳統新年食品 🥞",
+        level: "第二十四關",
+        tip: "黃色或白色的年節糕點，象徵快高長大、步步高升？"
+      },
+      {
+        text: "過年前，我們會在門口貼上寫滿吉祥、祝福語的紅紙，這叫做 [揮春] 。",
+        options: ["揮春", "賀卡", "燈籠", "風箏"],
+        topic: "新年佈置習俗 🧧",
+        level: "第二十五關",
+        tip: "紅色的、寫著「身體健康」或「出入平安」貼在門上的紙是？"
+      },
+      {
+        text: "新年前夕，全家人會一起合力進行 [大掃除] ，把不用的髒物清理代表去舊迎新。",
+        options: ["大掃除", "買年貨", "吃團飯", "去拜年"],
+        topic: "新年傳統習俗 🧹",
+        level: "第二十六關",
+        tip: "把家裡上下徹底清潔、除塵，這項傳統活動叫？"
+      },
+      {
+        text: "貼揮春、吃年糕、大掃除和收紅包，都是我們慶祝 [農曆新年] 的傳統習俗。",
+        options: ["中秋節", "端午節", "農曆新年", "聖誕節"],
+        topic: "三大傳統節日 🦁",
+        level: "第二十七關",
+        tip: "我們最重要的農曆一月一日大節日叫什麼？"
+      },
+      {
+        text: "中秋節時，全家人一邊在戶外賞月，一邊分享美味的 [月餅] 和柚子。",
+        options: ["年糕", "粽子", "月餅", "湯圓"],
+        topic: "中秋傳統佳餚 🥮",
+        level: "第二十八關",
+        tip: "圓圓的、包著蓮蓉蛋黃或豆沙、在中秋節吃的餅是？"
+      },
+      {
+        text: "農曆八月十五是 [中秋節] ，一輪圓月掛在夜空，象徵着「全家團圓」。",
+        options: ["中秋節", "重陽節", "端午節", "復活節"],
+        topic: "秋季傳統節日 🌕",
+        level: "第二十九關",
+        tip: "小朋友玩燈籠、吃柚子、月亮最圓最漂亮的傳統節日是？"
+      },
+      {
+        text: "秋天微風吹過時，我們會迎來 [重陽節] ，全家會去山上的墓地祭拜祖先。",
+        options: ["重陽節", "端午節", "新年", "復活節"],
+        topic: "敬老祭祖節日 🍂",
+        level: "第三十關",
+        tip: "農曆九月九日，既是敬老節，也是上山掃墓祭祖的？"
+      },
+      {
+        text: "重陽節有 [登高] 避疫的傳統習俗，我們會和家人一起去爬山鍛煉身體。",
+        options: ["游泳", "登高", "划船", "跑步"],
+        topic: "重陽傳統習俗 ⛰️",
+        level: "第三十一關",
+        tip: "重陽節去爬山，這項活動在中文裡通常寫作什麼？"
+      },
+      {
+        text: "端午節時，我們會在江面上看到一艘艘競渡的 [龍舟] ，聽到熱烈響亮的鼓聲。",
+        options: ["龍舟", "帆船", "郵輪", "漁船"],
+        topic: "端午運動項目 🐉",
+        level: "第三十二關",
+        tip: "船頭裝有龍頭雕刻、需要很多人合力划槳前進的水上競賽船是？"
+      },
+      {
+        text: "端午節吃粽子和划龍舟的習俗，相傳是為了尋找並紀念古代愛國詩人 [屈原] 。",
+        options: ["李白", "屈原", "杜甫", "蘇軾"],
+        topic: "端午節的由來 🍙",
+        level: "第三十三關",
+        tip: "投江自盡、讓我們端午節吃粽子保護他的古代愛國名人是？"
+      },
+      {
+        text: "每年的十二月二十五日是 [聖誕節] ，用來慶祝和紀念主耶穌基督的降生。",
+        options: ["聖誕節", "復活節", "中秋節", "重陽節"],
+        topic: "西方傳來節日 🎅",
+        level: "第三十四關",
+        tip: "冬天有聖誕老人、掛滿彩燈聖誕樹的十二月節慶是？"
+      },
+      {
+        text: "聖誕節期間，爸爸媽媽會帶我們去尖沙咀 [看燈飾] ，欣賞美麗奪目的夜景裝飾。",
+        options: ["看燈飾", "放煙花", "划龍舟", "爬山"],
+        topic: "聖誕休閒活動 🌟",
+        level: "第三十五關",
+        tip: "冬天的商場和街道掛起彩色的霓虹燈光，全家人去欣賞，叫？"
+      },
+      {
+        text: "聖誕前夕，學校或教會的唱詩班會到街上 [報佳音] ，唱詩歌分享耶穌出生的喜訊。",
+        options: ["報佳音", "大掃除", "登高", "貼揮春"],
+        topic: "聖誕節慶風俗 🎶",
+        level: "第三十六關",
+        tip: "在冬夜齊唱聖誕讚美詩、把聖誕平安消息傳給大家的活動是？"
+      },
+      {
+        text: "春天到來時，我們會迎來 [復活節] ，紀念耶穌基督被釘十字架後第三天復活。",
+        options: ["復活節", "聖誕節", "重陽節", "端午節"],
+        topic: "西方傳來節日 🥚",
+        level: "第三十七關",
+        tip: "有兔子送彩蛋、紀念耶穌重獲生命的重要春天西方節日是？"
+      },
+      {
+        text: "我們國家的 [國徽] 呈圓形，圖案包含五星、天安門、齒輪和麥稻，非常神聖莊嚴。",
+        options: ["國旗", "國徽", "國歌", "國花"],
+        topic: "國家的象徵 🛡️",
+        level: "第三十八關",
+        tip: "代表一個國家的圓形莊嚴徽章，裡面有齒輪與天安門的是？"
+      },
+      {
+        text: "在莊嚴的升國旗禮儀上，當《義勇軍進行曲》這首 [國歌] 奏響時，大家都要保持嚴肅。",
+        options: ["國歌", "校歌", "流行歌", "兒歌"],
+        topic: "國家的象徵 🎵",
+        level: "第三十九關",
+        tip: "代表我們祖國尊嚴、升旗時必須合唱或肅立聆聽的樂曲是？"
+      },
+      {
+        text: "我們國家的 [國旗] 是五星紅旗，旗面為紅色，左上方有五顆黃色五角星。",
+        options: ["國旗", "區旗", "校旗", "隊旗"],
+        topic: "國家的象徵 🇨🇳",
+        level: "第四十關",
+        tip: "升旗禮儀上升到高杆頂端、紅底五顆黃星的旗幟是？"
+      },
+      {
+        text: "每次在學校舉行升旗禮時，我們都要保持肅靜，向國旗和國徽 [注目肅立] 以示尊重。",
+        options: ["拍手歡呼", "注目肅立", "唱歌跳舞", "跑來跑去"],
+        topic: "升旗禮儀規範 🫡",
+        level: "第四十一關",
+        tip: "升旗時身體站直站定、雙眼注視著國旗緩緩上升，這叫？"
+      }
+    ];
+
+    // --- 閃卡資料 (用於閃卡Tab展示) ---
+    const FLASHCARDS = [
+      {
+        title: "大掃除",
+        category: "農曆新年",
+        icon: "🧹",
+        desc: "在農曆新年（春節）到來之前，一家人共同清潔家居，把霉運與污垢通通清走，代表「去舊迎新」！",
+        svg: `<svg viewBox="0 0 100 60" class="w-24 h-16"><circle cx="50" cy="30" r="25" fill="#fef3c7"/><path d="M40,25 L60,25 M45,35 L55,35" stroke="#d97706" stroke-width="3"/><path d="M35,20 L40,45 L60,45 L65,20 Z" fill="#fbbf24" opacity="0.8"/><line x1="50" y1="20" x2="50" y2="45" stroke="#b45309" stroke-width="4"/></svg>`
+      },
+      {
+        title: "吃年糕",
+        category: "農曆新年",
+        icon: "🥞",
+        desc: "過年時吃年糕，寓意學業進步、身體健康，一年比一年高，這叫「步步高升」！",
+        svg: `<svg viewBox="0 0 100 60" class="w-24 h-16"><ellipse cx="50" cy="35" rx="30" ry="15" fill="#f59e0b"/><ellipse cx="50" cy="25" rx="30" ry="12" fill="#fbbf24"/><ellipse cx="50" cy="15" rx="28" ry="10" fill="#fef08a"/></svg>`
+      },
+      {
+        title: "吃粽子",
+        category: "端午節",
+        icon: "🍙",
+        desc: "端午節吃粽子的習俗，相傳是要餵飽河裏的魚蝦，使牠們不會去咬屈原的身體。",
+        svg: `<svg viewBox="0 0 100 60" class="w-24 h-16"><polygon points="50,10 25,45 75,45" fill="#15803d"/><polygon points="50,10 40,45 60,45" fill="#166534"/><rect x="42" y="30" width="16" height="4" fill="#fef08a"/></svg>`
+      },
+      {
+        title: "重陽登高",
+        category: "重陽節",
+        icon: "⛰️",
+        desc: "重陽節當天，大家會全家去爬山（登高）或掃墓。注意掃墓時必須小心燃點香燭，確定火種熄滅才可離開！",
+        svg: `<svg viewBox="0 0 100 60" class="w-24 h-16"><path d="M10,50 L40,20 L60,45 L80,15 L95,50 Z" fill="#047857"/><circle cx="80" cy="15" r="5" fill="#fbbf24"/></svg>`
+      },
+      {
+        title: "中秋賞月",
+        category: "中秋節",
+        icon: "🌕",
+        desc: "農曆八月十五是中秋節。一家人一起賞月、吃月餅、吃柚子和玩燈籠，象徵「全家團圓」。",
+        svg: `<svg viewBox="0 0 100 60" class="w-24 h-16"><rect width="100" height="60" fill="#1e1b4b" rx="10"/><circle cx="50" cy="30" r="18" fill="#fef08a"/><circle cx="45" cy="25" r="3" fill="#eab308"/></svg>`
+      },
+      {
+        title: "復活節",
+        category: "外地節日",
+        icon: "✝️",
+        desc: "復活節是外地傳來的節日，主要為了紀念主耶穌基督被釘十字架死後，於「第三天復活」的日子。",
+        svg: `<svg viewBox="0 0 100 60" class="w-24 h-16"><path d="M50,10 C35,10 30,48 50,48 C70,48 65,10 50,10 Z" fill="#ec4899"/><path d="M35,30 Q50,40 65,30" stroke="#fdf2f8" stroke-width="3" fill="none"/></svg>`
+      },
+      {
+        title: "聖誕節",
+        category: "外地節日",
+        icon: "🎄",
+        desc: "每年的十二月二十五日是聖誕節，用來慶祝和紀念「主耶穌基督降生（誕生）」的歡樂節日。",
+        svg: `<svg viewBox="0 0 100 60" class="w-24 h-16"><polygon points="50,10 30,30 70,30" fill="#15803d"/><polygon points="50,22 20,45 80,45" fill="#166534"/><rect x="46" y="45" width="8" height="10" fill="#78350f"/></svg>`
+      },
+      {
+        title: "五星紅旗",
+        category: "國家象徵",
+        icon: "🇨🇳",
+        desc: "我們國家的國旗，形狀是長方形，旗面顏色是紅色，左上方有五顆黃色五角星。",
+        svg: `<svg viewBox="0 0 100 60" class="w-24 h-16"><rect width="100" height="60" fill="#de2910" rx="4"/><polygon points="15,10 18,18 25,18 19,22 21,29 15,24 9,29 11,22 5,18 12,18" fill="#ffde00"/><polygon points="30,8 31,11 34,11 32,13 33,16 30,14 27,16 28,13 26,11 29,11" fill="#ffde00" transform="rotate(10,30,8)"/><polygon points="35,14 36,17 39,17 37,19 38,22 35,20 32,22 33,19 31,17 34,17" fill="#ffde00" transform="rotate(25,35,14)"/></svg>`
+      },
+      {
+        title: "國家國徽",
+        category: "國家象徵",
+        icon: "🛡️",
+        desc: "國徽上有麥稻、五角星、天安門和齒輪。我們在升國旗、奏國歌儀式時要「注目肅立」以示尊重！",
+        svg: `<svg viewBox="0 0 100 100" class="w-16 h-16"><circle cx="50" cy="50" r="45" fill="#de2910" stroke="#ffde00" stroke-width="4"/><rect x="30" y="55" width="40" height="15" fill="#ffde00"/><path d="M35,50 L45,35 L55,35 L65,50 Z" fill="#fef08a"/><circle cx="50" cy="22" r="6" fill="#ffde00"/></svg>`
+      },
+      {
+        title: "家居安全",
+        category: "我的安樂窩",
+        icon: "🧯",
+        desc: "保持家居整潔，不做危險行為。不接觸熱水、刀具等危險物品，提防陌生人，不要獨自開門！",
+        svg: `<svg viewBox="0 0 100 60" class="w-24 h-16"><path d="M50,10 L15,48 L85,48 Z" fill="#ef4444" stroke="#ffffff" stroke-width="3"/><rect x="47" y="22" width="6" height="15" fill="#ffffff"/><circle cx="50" cy="42" r="3" fill="#ffffff"/></svg>`
+      }
+    ];
+
+    // --- 是非題數據 ---
+    const TF_QUESTIONS = [
+      {
+        text: "六歲的弟弟在廚房內貪玩撞向正拿著滾燙熱水的媽媽，導致熱水打翻燙傷姐姐。這件事情告訴我們，小朋友絕對不應該在廚房玩耍。",
+        answer: true,
+        category: "安全行為",
+        tip: "沒錯！廚房裡有熱水、刀具、爐火，非常多危險，絕對不是遊戲玩耍的地方！",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><rect width="100" height="80" fill="#fee2e2" rx="12" stroke="#fca5a5" stroke-width="2"/><path d="M50,15 L85,65 L15,65 Z" fill="#ef4444"/><text x="50" y="58" font-size="35" fill="#ffffff" font-weight="bold" text-anchor="middle">!</text></svg>`
+      },
+      {
+        text: "若看到廚房的報紙被爐火燒着（起火），我們應該立即躲在衣櫃裏自己玩玩具，不理會它。",
+        answer: false,
+        category: "安全行為",
+        tip: "起火是非常嚴重的危險！應該大聲呼叫家人，在安全情況下報警，絕不能躲起來。",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><rect width="100" height="80" fill="#fff7ed" rx="12" stroke="#fdba74" stroke-width="2"/><path d="M40,55 C40,40 50,25 50,25 C50,25 60,40 60,55 Z" fill="#ea580c"/><path d="M45,55 C45,45 50,35 50,35 C50,35 55,45 55,55 Z" fill="#f97316"/></svg>`
+      },
+      {
+        text: "當我們遇到煤氣洩漏、火警等非常緊急需要報警求助的情況時，在香港應該撥打「999」求助。",
+        answer: true,
+        category: "緊急求助常識",
+        tip: "沒錯！香港的緊急求助電話是999。但平常沒有緊急事情絕對不可以亂撥！",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><rect width="100" height="80" fill="#ecfdf5" rx="12" stroke="#6ee7b7" stroke-width="2"/><text x="50" y="48" font-size="28" fill="#047857" font-weight="bold" text-anchor="middle">999</text></svg>`
+      },
+      {
+        text: "爸爸媽媽兩邊的親戚常有往來。其中爸爸的姊姊或妹妹，我們應該稱呼為「姨母」。",
+        answer: false,
+        category: "親戚稱謂",
+        tip: "不對喔！爸爸的姊妹我們應該稱呼為「姑母/姑姐」，媽媽的姊妹才稱呼為「姨母」。",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><circle cx="50" cy="40" r="30" fill="#fef08a"/><path d="M40,35 Q50,45 60,35" stroke="#ca8a04" stroke-width="3" fill="none"/><circle cx="42" cy="30" r="3" fill="#ca8a04"/><circle cx="58" cy="30" r="3" fill="#ca8a04"/><rect x="46" y="45" width="8" height="15" fill="#ca8a04"/></svg>`
+      },
+      {
+        text: "在莊嚴的升國旗奏國歌典禮時，大家一定要站直、不說話，注目肅立！",
+        answer: true,
+        category: "尊重國家象徵",
+        tip: "沒錯！升國旗奏國歌是莊嚴的，大家都應當保持安靜，向國旗注目肅立。",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><rect width="100" height="80" fill="#f1f5f9" rx="12" stroke="#cbd5e1" stroke-width="2"/><line x1="50" y1="15" x2="50" y2="65" stroke="#475569" stroke-width="4"/><rect x="50" y="15" width="25" height="18" fill="#ef4444"/></svg>`
+      },
+      {
+        text: "重陽節去山上掃墓，必須在確定所有火種完全熄滅才可以離開，保護大自然！",
+        answer: true,
+        category: "重陽山林防火",
+        tip: "非常正確！火種如果不完全淋熄，風一吹就會引起嚴重的山林火災，十分危險！",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><rect width="100" height="80" fill="#fff1f2" rx="12" stroke="#fecdd3" stroke-width="2"/><path d="M30,55 L70,55 L50,25 Z" fill="#fda4af"/><path d="M45,55 L55,55 L50,40 Z" fill="#f43f5e"/></svg>`
+      }
+    ];
+
+    // --- 趣味配對數據 ---
+    const MATCHING_ITEMS = [
+      { left: "爸爸的父母 (爺爺嫲嫲)", right: "👵 祖父與祖母", id: 1 },
+      { left: "媽媽的父母 (公公婆婆)", right: "👴 外祖父與外祖母", id: 2 },
+      { left: "媽媽的姊妹 (阿姨)", right: "👩‍🦰 姨母", id: 3 },
+      { left: "端午節紀念偉人", right: "🍙 屈原", id: 4 },
+      { text_align: "left", left: "中秋節經典習俗", right: "🌕 吃月餅與賞月", id: 5 },
+      { left: "重陽節經典習俗", right: "⛰️ 登高與掃墓拜祭", id: 6 },
+      { left: "農曆新年必吃食品", right: "🥞 吃年糕與煎堆", id: 7 },
+      { left: "國歌的名字", right: "🎵 《義勇軍進行曲》", id: 8 }
+    ];
+
+    function switchTab(tabId) {
+      currentTab = tabId;
+      document.querySelectorAll(".tab-content").forEach(el => el.classList.add("hidden"));
+      document.querySelectorAll(".tab-btn").forEach(el => {
+        el.classList.remove("bg-indigo-50", "text-indigo-600", "border-indigo-200", "soft-card-shadow");
+        el.classList.add("bg-white", "text-slate-700", "border-slate-100");
+      });
+
+      // 顯示當前標籤
+      const currentElement = document.getElementById(`tab-${tabId}`);
+      currentElement.classList.remove("hidden");
+      currentElement.classList.add("flex");
+      
+      const activeNav = document.getElementById(`nav-${tabId}`);
+      activeNav.classList.remove("bg-white", "text-slate-700", "border-slate-100");
+      
+      // 給選中的標籤積木加上舒適的粉彩色與軟陰影
+      if (tabId === "flashcard") {
+        activeNav.classList.add("bg-indigo-50", "text-indigo-600", "border-indigo-200", "soft-card-shadow");
+      } else if (tabId === "quiz-fill") {
+        activeNav.classList.add("bg-amber-50", "text-amber-600", "border-amber-200", "soft-card-shadow");
+      } else if (tabId === "quiz-tf") {
+        activeNav.classList.add("bg-emerald-50", "text-emerald-600", "border-emerald-200", "soft-card-shadow");
+      } else if (tabId === "quiz-match") {
+        activeNav.classList.add("bg-sky-50", "text-sky-600", "border-sky-200", "soft-card-shadow");
+      }
+
+      updateOwlTip();
+    }
+
+    function updateOwlTip(specificText = null) {
+      let tip = "";
+      if (specificText) {
+        tip = specificText;
+      } else {
+        if (currentTab === "flashcard") {
+          tip = OWL_TIPS.flashcard[fcIndex % OWL_TIPS.flashcard.length];
+        } else if (currentTab === "quiz-fill") {
+          tip = FILL_QUESTIONS[fillIndex].tip;
+        } else if (currentTab === "quiz-tf") {
+          tip = OWL_TIPS["quiz-tf"][tfIndex];
+        } else if (currentTab === "quiz-match") {
+          tip = OWL_TIPS["quiz-match"][0];
+        }
+      }
+
+      document.getElementById("helper-text").innerText = tip;
+      
+      // 貓頭鷹博士小動畫
+      const box = document.getElementById("helper-box");
+      box.classList.add("scale-[1.01]");
+      setTimeout(() => {
+        box.classList.remove("scale-[1.01]");
+      }, 300);
+    }
+
+    // --- 模式一：閃卡處理 ---
+    function renderFlashcard() {
+      const data = FLASHCARDS[fcIndex];
+      const card = document.getElementById("flashcard-element");
+      
+      card.classList.remove("flipped");
+
+      // 正面渲染
+      document.getElementById("fc-category").innerText = data.category;
+      document.getElementById("fc-icon").innerText = data.icon;
+      document.getElementById("fc-title").innerText = data.title;
+
+      // 背面渲染
+      document.getElementById("fc-back-img").innerHTML = data.svg;
+      document.getElementById("fc-desc").innerText = data.desc;
+
+      // 更新進度
+      document.getElementById("flashcard-progress").innerText = `${fcIndex + 1} / ${FLASHCARDS.length}`;
+      
+      updateOwlTip();
+    }
+
+    function toggleFlashcard() {
+      const card = document.getElementById("flashcard-element");
+      card.classList.toggle("flipped");
+    }
+
+    function nextFlashcard() {
+      fcIndex = (fcIndex + 1) % FLASHCARDS.length;
+      renderFlashcard();
+    }
+
+    function prevFlashcard() {
+      fcIndex = (fcIndex - 1 + FLASHCARDS.length) % FLASHCARDS.length;
+      renderFlashcard();
+    }
+
+    function speakFlashcardText(e) {
+      e.stopPropagation(); // 阻止卡片翻面
+      const data = FLASHCARDS[fcIndex];
+      speakText(`${data.title}。${data.desc}`);
+    }
+
+    function speakFlashcardTextSimple() {
+      const data = FLASHCARDS[fcIndex];
+      speakText(data.title);
+    }
+
+    // --- 模式二：填充題處理 ---
+    function renderFillQuestion() {
+      const q = FILL_QUESTIONS[fillIndex];
+      selectedAnswer = ""; 
+
+      document.getElementById("fill-level-badge").innerText = q.level;
+      document.getElementById("fill-topic").innerHTML = `<span>💡</span> 主題：${q.topic}`;
+      document.getElementById("fill-progress").innerText = `${fillIndex + 1} / ${FILL_QUESTIONS.length}`;
+
+      const rawText = q.text;
+      const bracketRegex = /\[(.*?)\]/g;
+      
+      // 建立更顯眼的大字體可交互填充氣泡（粉彩、無黑邊與舒服邊框，字體升級至 text-2xl）
+      let formattedHtml = rawText.replace(bracketRegex, (match, word) => {
+        return `<span id="fill-blank" class="inline-block border-2 border-dashed border-sky-300 bg-sky-50/50 text-sky-700 font-extrabold px-6 py-2 rounded-full min-w-[160px] text-center mx-1.5 shadow-sm cursor-pointer hover:scale-105 active:scale-95 transition-all duration-200 text-2xl">❓ 點擊填入</span>`;
+      });
+
+      document.getElementById("fill-question-container").innerHTML = formattedHtml;
+
+      // 產生選項按鈕
+      const optionsContainer = document.getElementById("fill-options-container");
+      optionsContainer.innerHTML = "";
+
+      const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
+
+      // 馬卡龍粉彩配色組（去除了硬框硬線）
+      const blockColors = [
+        "bg-pink-50 hover:bg-pink-100 border-pink-100 text-pink-700",
+        "bg-sky-50 hover:bg-sky-100 border-sky-100 text-sky-700",
+        "bg-emerald-50 hover:bg-emerald-100 border-emerald-100 text-emerald-700",
+        "bg-amber-50 hover:bg-amber-100 border-amber-100 text-amber-700"
+      ];
+
+      shuffledOptions.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        const colorClass = blockColors[idx % blockColors.length];
+        // 放大為 text-2xl 與中大螢幕下的 text-3xl，搭配更寬鬆的 px-7 與 py-4
+        btn.className = `fill-opt-btn hover:scale-[1.05] border font-black text-2xl sm:text-3xl px-7 py-4 rounded-2xl soft-card-shadow transition-all duration-200 ${colorClass}`;
+        btn.innerText = opt;
+        btn.onclick = () => selectFillOption(opt, btn);
+        optionsContainer.appendChild(btn);
+      });
+
+      // 重置反饋列
+      const feedbackBar = document.getElementById("fill-feedback-bar");
+      feedbackBar.className = "hidden";
+
+      document.getElementById("fill-check-btn").classList.remove("hidden");
+      document.getElementById("fill-next-btn").classList.add("hidden");
+
+      updateOwlTip();
+    }
+
+    function selectFillOption(value, btnElement) {
+      selectedAnswer = value;
+      
+      const blank = document.getElementById("fill-blank");
+      if (blank) {
+        blank.innerText = value;
+        blank.classList.remove("border-dashed", "border-sky-300", "bg-sky-50/50", "text-sky-700");
+        blank.classList.add("border-solid", "border-indigo-300", "bg-indigo-50", "text-indigo-700", "scale-105");
+      }
+
+      document.querySelectorAll(".fill-opt-btn").forEach(btn => {
+        btn.classList.remove("ring-4", "ring-indigo-100", "scale-[1.05]");
+      });
+      btnElement.classList.add("ring-4", "ring-indigo-100", "scale-[1.05]");
+
+      speakText(value);
+    }
+
+    function checkFillAnswer() {
+      const feedbackBar = document.getElementById("fill-feedback-bar");
+
+      if (!selectedAnswer) {
+        playSound('incorrect');
+        speakText("你還沒有點選詞語喔，快點選一個答案吧！");
+        feedbackBar.className = "p-3 rounded-2xl text-center text-sm font-black my-2 bg-amber-50 text-amber-700 animate-shake border border-amber-200";
+        feedbackBar.innerText = "⚠️ 請點選下方候選詞填入括號中！";
+        return;
+      }
+
+      const q = FILL_QUESTIONS[fillIndex];
+      const targetRegex = /\[(.*?)\]/g;
+      const matches = [...q.text.matchAll(targetRegex)];
+      
+      let isCorrect = false;
+      if (matches.length === 1) {
+        isCorrect = (selectedAnswer === matches[0][1]);
+      } else {
+        isCorrect = matches.some(match => match[1] === selectedAnswer);
+      }
+
+      const blank = document.getElementById("fill-blank");
+
+      if (isCorrect) {
+        playSound('correct');
+        score += 15;
+        updateScore();
+        triggerSuccessConfetti();
+        // 成功加回「答對了！」的廣東話發音
+        speakText("答對了！"); 
+        updateOwlTip("太棒了！全對！點擊「下一題」看更多好玩的！🦉🌟");
+
+        blank.className = "inline-block border-2 border-emerald-300 bg-emerald-50 text-emerald-700 font-extrabold px-6 py-2 rounded-full min-w-[160px] text-center mx-1.5 animate-bounce text-2xl";
+        
+        feedbackBar.className = "p-3 rounded-2xl text-center text-sm font-black my-2 bg-emerald-50 text-emerald-700 border border-emerald-100";
+        feedbackBar.innerText = "🎉 答對了！你真優秀！";
+
+        document.querySelectorAll(".fill-opt-btn").forEach(btn => btn.disabled = true);
+        
+        document.getElementById("fill-check-btn").classList.add("hidden");
+        document.getElementById("fill-next-btn").classList.remove("hidden");
+      } else {
+        playSound('incorrect');
+        speakText("唔，不對喔。再想一想！");
+        updateOwlTip(`不對喔。貓頭鷹提示你：${q.tip}`);
+        
+        blank.className = "inline-block border-2 border-rose-300 bg-rose-50 text-rose-700 font-extrabold px-6 py-2 rounded-full min-w-[160px] text-center mx-1.5 animate-shake text-2xl";
+        feedbackBar.className = "p-3 rounded-2xl text-center text-sm font-black my-2 bg-rose-50 text-rose-700 border border-rose-100 animate-shake";
+        feedbackBar.innerText = "❌ 答錯了，請再試試看！";
+
+        setTimeout(() => {
+          blank.className = "inline-block border-2 border-dashed border-sky-300 bg-sky-50/50 text-sky-700 font-extrabold px-6 py-2 rounded-full min-w-[160px] text-center mx-1.5 text-2xl";
+          blank.innerText = "❓ 點擊填入";
+          selectedAnswer = "";
+          feedbackBar.className = "hidden";
+        }, 2200);
+      }
+    }
+
+    function nextFillQuestion() {
+      fillIndex = (fillIndex + 1) % FILL_QUESTIONS.length;
+      renderFillQuestion();
+    }
+
+    function speakFillQuestion() {
+      const q = FILL_QUESTIONS[fillIndex];
+      const readableText = q.text.replace(/\[.*?\]/g, " 甚麼 ");
+      speakText(readableText);
+    }
+
+    // --- 模式三：是非挑戰處理 ---
+    function renderTFQuestion() {
+      const q = TF_QUESTIONS[tfIndex];
+
+      document.getElementById("tf-progress").innerText = `${tfIndex + 1} / ${TF_QUESTIONS.length}`;
+      document.getElementById("tf-question-text").innerText = q.text;
+      document.getElementById("tf-visual-container").innerHTML = q.svg;
+
+      const feedbackBar = document.getElementById("tf-feedback-bar");
+      feedbackBar.className = "hidden";
+
+      updateOwlTip();
+    }
+
+    function submitTFAnswer(userAns) {
+      const q = TF_QUESTIONS[tfIndex];
+      const feedbackBar = document.getElementById("tf-feedback-bar");
+
+      if (userAns === q.answer) {
+        playSound('correct');
+        score += 10;
+        updateScore();
+        triggerSuccessConfetti();
+        speakText("答對了！做得好！");
+        updateOwlTip(`答對了！恭喜你！貓頭鷹：${q.tip}`);
+
+        feedbackBar.className = "p-3 rounded-2xl text-center text-sm font-black my-2 bg-emerald-50 text-emerald-700 border border-emerald-100 animate-bounce";
+        feedbackBar.innerText = "🎉 恭喜！你答對了！";
+
+        setTimeout(() => {
+          tfIndex = (tfIndex + 1) % TF_QUESTIONS.length;
+          renderTFQuestion();
+        }, 3800);
+
+      } else {
+        playSound('incorrect');
+        speakText("哎呀，不對喔。");
+        updateOwlTip(`不對喔。你要記住：${q.tip}`);
+        
+        feedbackBar.className = "p-3 rounded-2xl text-center text-sm font-black my-2 bg-rose-50 text-rose-700 border border-rose-100 animate-shake";
+        feedbackBar.innerText = "❌ 不對喔，請重新思考安全原則！";
+
+        const box = document.getElementById("helper-box");
+        box.classList.add("bg-rose-50", "border-rose-100");
+        setTimeout(() => {
+          box.classList.remove("bg-rose-50", "border-rose-100");
+          feedbackBar.className = "hidden";
+        }, 3000);
+      }
+    }
+
+    // --- 模式四：配對連線處理 ---
+    function renderMatchingBoard() {
+      selectedLeftId = null;
+      selectedRightId = null;
+      matchedPairs = [];
+
+      const matchLeftCol = document.getElementById("match-left-column");
+      const matchRightCol = document.getElementById("match-right-column");
+
+      matchLeftCol.innerHTML = "";
+      matchRightCol.innerHTML = "";
+
+      // 隨機混淆左、右兩邊的題目與答案
+      const leftItems = [...MATCHING_ITEMS].sort(() => Math.random() - 0.5);
+      const rightItems = [...MATCHING_ITEMS].sort(() => Math.random() - 0.5);
+
+      leftItems.forEach(item => {
+        const btn = document.createElement("button");
+        btn.id = `match-left-${item.id}`;
+        // 加上凸出拼圖卡片樣式 puzzle-left 以及動畫漸變（改為輕柔細緻灰白與藍色相接線）
+        btn.className = "puzzle-left w-full text-left bg-gradient-to-r from-blue-50/50 to-indigo-50/50 border border-slate-100 hover:border-indigo-300 text-slate-700 font-extrabold p-4 rounded-2xl soft-card-shadow hover:scale-[1.01] transition-all text-sm sm:text-base flex items-center justify-between";
+        btn.innerHTML = `<span class="flex items-center gap-2"><span class="text-indigo-500 font-extrabold">Q.</span> <span>${item.left}</span></span> <i class="fa-solid fa-puzzle-piece text-indigo-300 text-lg"></i>`;
+        btn.onclick = () => selectLeftMatching(item.id, btn);
+        matchLeftCol.appendChild(btn);
+      });
+
+      rightItems.forEach(item => {
+        const btn = document.createElement("button");
+        btn.id = `match-right-${item.id}`;
+        // 加上凹入拼圖卡片樣式 puzzle-right 以及凹陷動畫（改為輕柔細緻灰白與條色相接線）
+        btn.className = "puzzle-right w-full text-right bg-gradient-to-l from-orange-50/50 to-amber-50/50 border border-slate-100 hover:border-amber-300 text-slate-700 font-extrabold p-4 rounded-2xl soft-card-shadow hover:scale-[1.01] transition-all text-sm sm:text-base flex items-center justify-between";
+        btn.innerHTML = `<i class="fa-solid fa-puzzle-piece text-amber-300 text-lg"></i> <span class="flex items-center gap-2"><span>${item.right}</span></span>`;
+        btn.onclick = () => selectRightMatching(item.id, btn);
+        matchRightCol.appendChild(btn);
+      });
+
+      document.getElementById("match-feedback").className = "bg-indigo-50/50 p-4 rounded-2xl text-center text-sm text-indigo-600 font-bold border border-indigo-100";
+      document.getElementById("match-feedback").innerText = "點擊左側藍色題目拼圖卡，再點擊右側橙色答案拼圖卡，將兩者合體！";
+    }
+
+    function selectLeftMatching(id, btnElement) {
+      if (matchedPairs.includes(id)) return; 
+
+      if (selectedLeftId === id) {
+        selectedLeftId = null;
+        btnElement.classList.remove("border-indigo-300", "ring-4", "ring-indigo-50", "from-indigo-100/70", "to-indigo-200/70");
+        btnElement.classList.add("from-blue-50/50", "to-indigo-50/50");
+        return;
+      }
+
+      selectedLeftId = id;
+
+      document.querySelectorAll("[id^='match-left-']").forEach(btn => {
+        const btnId = parseInt(btn.id.replace("match-left-", ""));
+        if (!matchedPairs.includes(btnId)) {
+          btn.className = "puzzle-left w-full text-left bg-gradient-to-r from-blue-50/50 to-indigo-50/50 border border-slate-100 text-slate-700 font-bold p-4 rounded-2xl soft-card-shadow";
+          btn.querySelector("i").className = "fa-solid fa-puzzle-piece text-indigo-300 text-lg";
+        }
+      });
+
+      btnElement.classList.remove("from-blue-50/50", "to-indigo-50/50", "border-slate-100");
+      btnElement.classList.add("border-indigo-300", "from-indigo-100/70", "to-indigo-200/70", "ring-4", "ring-indigo-50");
+      btnElement.querySelector("i").className = "fa-solid fa-puzzle-piece text-indigo-500 text-lg animate-bounce";
+
+      const item = MATCHING_ITEMS.find(x => x.id === id);
+      speakText(item.left);
+
+      checkMatchAttempt();
+    }
+
+    function selectRightMatching(id, btnElement) {
+      if (matchedPairs.includes(id)) return; 
+
+      if (selectedRightId === id) {
+        selectedRightId = null;
+        btnElement.classList.remove("border-amber-300", "ring-4", "ring-amber-5", "from-amber-100/70", "to-amber-200/70", "puzzle-active");
+        btnElement.classList.add("from-orange-50/50", "to-amber-50/50");
+        return;
+      }
+
+      selectedRightId = id;
+
+      document.querySelectorAll("[id^='match-right-']").forEach(btn => {
+        const btnId = parseInt(btn.id.replace("match-right-", ""));
+        if (!matchedPairs.includes(btnId)) {
+          btn.className = "puzzle-right w-full text-right bg-gradient-to-l from-orange-50/50 to-amber-50/50 border border-slate-100 text-slate-700 font-bold p-4 rounded-2xl soft-card-shadow";
+          btn.querySelector("i").className = "fa-solid fa-puzzle-piece text-amber-300 text-lg";
+        }
+      });
+
+      btnElement.classList.remove("from-orange-50/50", "to-amber-50/50", "border-slate-100");
+      btnElement.classList.add("border-amber-300", "from-amber-100/70", "to-amber-200/70", "ring-4", "ring-amber-50", "puzzle-active");
+      btnElement.querySelector("i").className = "fa-solid fa-puzzle-piece text-amber-500 text-lg animate-bounce";
+
+      const item = MATCHING_ITEMS.find(x => x.id === id);
+      speakText(item.right);
+
+      checkMatchAttempt();
+    }
+
+    function checkMatchAttempt() {
+      if (selectedLeftId !== null && selectedRightId !== null) {
+        const leftBtn = document.getElementById(`match-left-${selectedLeftId}`);
+        const rightBtn = document.getElementById(`match-right-${selectedRightId}`);
+
+        if (selectedLeftId === selectedRightId) {
+          playSound('correct');
+          const matchedId = selectedLeftId;
+          matchedPairs.push(matchedId);
+
+          // 成功拼合的翡翠綠拼圖卡片樣式
+          leftBtn.className = "puzzle-left w-full text-left bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 text-emerald-700 font-bold p-4 rounded-2xl shadow-inner cursor-default pointer-events-none transform scale-98 transition-all duration-300";
+          leftBtn.querySelector("i").className = "fa-solid fa-circle-check text-emerald-500 text-lg";
+
+          rightBtn.className = "puzzle-right puzzle-matched w-full text-right bg-gradient-to-l from-emerald-50 to-teal-50 border border-emerald-200 text-emerald-700 font-bold p-4 rounded-2xl shadow-inner cursor-default pointer-events-none transform scale-98 transition-all duration-300";
+          rightBtn.querySelector("i").className = "fa-solid fa-circle-check text-emerald-500 text-lg";
+
+          score += 10;
+          updateScore();
+          triggerSuccessConfetti();
+          speakText("合體成功！");
+
+          selectedLeftId = null;
+          selectedRightId = null;
+
+          if (matchedPairs.length === MATCHING_ITEMS.length) {
+            document.getElementById("match-feedback").className = "bg-emerald-50 p-4 rounded-xl text-center text-sm text-emerald-700 font-bold animate-bounce mt-4 shadow-sm border border-emerald-100";
+            document.getElementById("match-feedback").innerText = "🎉 太出色了！你完美拼裝了所有知識拼圖！";
+            speakText("哇！你太聰明了，全部都配對成功了！");
+            updateOwlTip("恭喜你！完美的知識配對！你已經徹底掌握了人文科重要學科詞彙！🦉🏆");
+          } else {
+            document.getElementById("match-feedback").innerText = `太棒了！拼合成功！還剩下 ${MATCHING_ITEMS.length - matchedPairs.length} 組拼圖需要合體喔。`;
+          }
+
+        } else {
+          playSound('incorrect');
+          // 拼裝失敗：閃紅光與搖晃
+          leftBtn.className = "puzzle-left w-full text-left bg-gradient-to-r from-rose-50 to-red-50 border border-rose-200 text-rose-700 font-bold p-4 rounded-2xl shadow-sm animate-shake";
+          rightBtn.className = "puzzle-right w-full text-right bg-gradient-to-l from-rose-50 to-red-50 border border-rose-200 text-rose-700 font-bold p-4 rounded-2xl shadow-sm animate-shake";
+
+          speakText("拼裝不合喔，再試試看！");
+
+          const tempLeft = selectedLeftId;
+          const tempRight = selectedRightId;
+
+          selectedLeftId = null;
+          selectedRightId = null;
+
+          setTimeout(() => {
+            if (!matchedPairs.includes(tempLeft)) {
+              const bL = document.getElementById(`match-left-${tempLeft}`);
+              if (bL) {
+                bL.className = "puzzle-left w-full text-left bg-gradient-to-r from-blue-50/50 to-indigo-50/50 border border-slate-100 text-slate-700 font-bold p-4 rounded-2xl soft-card-shadow hover:border-indigo-300";
+                bL.querySelector("i").className = "fa-solid fa-puzzle-piece text-indigo-300 text-lg";
+              }
+            }
+            if (!matchedPairs.includes(tempRight)) {
+              const bR = document.getElementById(`match-right-${tempRight}`);
+              if (bR) {
+                bR.className = "puzzle-right w-full text-right bg-gradient-to-l from-orange-50/50 to-amber-50/50 border border-slate-100 text-slate-700 font-bold p-4 rounded-2xl soft-card-shadow hover:border-amber-300";
+                bR.querySelector("i").className = "fa-solid fa-puzzle-piece text-amber-300 text-lg";
+              }
+            }
+          }, 1100);
+        }
+      }
+    }
+
+    function resetMatching() {
+      renderMatchingBoard();
+    }
+
+    // --- 通用工具 ---
+    function updateScore() {
+      document.getElementById("score-display").innerText = score;
+    }
+
+    function triggerSuccessConfetti() {
+      confetti({
+        particleCount: 100,
+        spread: 80,
+        origin: { y: 0.6 }
+      });
+    }
+
+    // --- 設定 window.onload 起始載入程序 ---
+    window.onload = function() {
+      switchTab("flashcard");
+      renderFlashcard();
+      renderFillQuestion();
+      renderTFQuestion();
+      renderMatchingBoard();
+      
+      // 親切語音歡迎
+      setTimeout(() => {
+        speakText("小朋友你好！我是貓頭鷹博士。讓我們一起快樂地溫習人文科吧！🦉");
+      }, 700);
+    };
+
+  </script>
+</body>
+</html>
