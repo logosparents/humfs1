@@ -283,7 +283,7 @@
             <p class="text-sm sm:text-base text-slate-500 mb-3.5 font-black uppercase tracking-wider flex items-center gap-1">
               <span>🍬</span> 供詞選項（請點選正確答案）：
             </p>
-            <div class="flex flex-wrap gap-4" id="fill-options-container">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full justify-items-stretch" id="fill-options-container">
               <!-- 動態填充供詞按鈕 -->
             </div>
           </div>
@@ -1063,8 +1063,8 @@
       shuffledOptions.forEach((opt, idx) => {
         const btn = document.createElement("button");
         const colorClass = blockColors[idx % blockColors.length];
-        // 放大為 text-2xl 與中大螢幕下的 text-3xl，搭配更寬鬆的 px-7 與 py-4
-        btn.className = `fill-opt-btn hover:scale-[1.05] border font-black text-2xl sm:text-3xl px-7 py-4 rounded-2xl soft-card-shadow transition-all duration-200 ${colorClass}`;
+        // 放大為 text-2xl 與中大螢幕下的 text-3xl，搭配更寬鬆的 px-4 與 py-4，並設定 w-full 以拍齊整行
+        btn.className = `fill-opt-btn w-full text-center hover:scale-[1.05] border font-black text-2xl sm:text-3xl px-4 py-4 rounded-2xl soft-card-shadow transition-all duration-200 ${colorClass}`;
         btn.innerText = opt;
         btn.onclick = () => selectFillOption(opt, btn);
         optionsContainer.appendChild(btn);
