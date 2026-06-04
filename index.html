@@ -318,7 +318,7 @@
           </div>
 
           <!-- 是非題題目文本（改為清新軟底色） -->
-          <div class="bg-emerald-50/50 p-5 rounded-2xl border border-emerald-100 text-lg font-bold text-slate-700 text-center my-4 leading-relaxed" id="tf-question-text">
+          <div class="bg-emerald-50/50 p-5 rounded-2xl border-2 border-emerald-100 text-lg font-bold text-slate-700 text-center my-4 leading-relaxed" id="tf-question-text">
             <!-- 題目載入位置 -->
           </div>
         </div>
@@ -353,7 +353,7 @@
 
           <!-- 拼圖排版配對面板 -->
           <div class="grid grid-cols-2 gap-x-8 gap-y-3.5 my-4">
-            <!-- 左欄：題目拼圖 (凸出，採用無硬框、柔和粉藍與粉黃拼圖) -->
+            <!-- 左欄：題目拼圖 (凸出) -->
             <div class="flex flex-col gap-3.5" id="match-left-column">
               <!-- 動態凸拼圖按鈕 -->
             </div>
@@ -383,11 +383,15 @@
   </footer>
 
   <script>
+    // --- 遊戲核心邏輯全域變數 ---
     let fcIndex = 0;
     let fillIndex = 0;
     let tfIndex = 0;
     let score = 0;
     let currentTab = "flashcard";
+
+    // 儲存隨機打亂後的填充題陣列
+    let randomizedFillQuestions = [];
 
     // 配對邏輯狀態變數
     let selectedLeftId = null;
@@ -500,7 +504,7 @@
       ]
     };
 
-    // --- 41題供詞填充數據（完全包含指定詞彙） ---
+    // --- 41題供詞填充數據（包含全部核心字詞） ---
     const FILL_QUESTIONS = [
       {
         text: "我們每天生活在一起，互相關心、互相愛護的親密成員，就是我們的 [家人] 。",
@@ -917,11 +921,27 @@
       { left: "媽媽的父母 (公公婆婆)", right: "👴 外祖父與外祖母", id: 2 },
       { left: "媽媽的姊妹 (阿姨)", right: "👩‍🦰 姨母", id: 3 },
       { left: "端午節紀念偉人", right: "🍙 屈原", id: 4 },
-      { text_align: "left", left: "中秋節經典習俗", right: "🌕 吃月餅與賞月", id: 5 },
+      { left: "中秋節經典習俗", right: "🌕 吃月餅與賞月", id: 5 },
       { left: "重陽節經典習俗", right: "⛰️ 登高與掃墓拜祭", id: 6 },
       { left: "農曆新年必吃食品", right: "🥞 吃年糕與煎堆", id: 7 },
       { left: "國歌的名字", right: "🎵 《義勇軍進行曲》", id: 8 }
     ];
+
+    // --- 隨機排序（Fisher-Yates Shuffle） ---
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    // --- 初始化隨機題目 ---
+    function initRandomQuestions() {
+      randomizedFillQuestions = shuffleArray(FILL_QUESTIONS);
+      fillIndex = 0;
+    }
 
     function switchTab(tabId) {
       currentTab = tabId;
@@ -961,7 +981,11 @@
         if (currentTab === "flashcard") {
           tip = OWL_TIPS.flashcard[fcIndex % OWL_TIPS.flashcard.length];
         } else if (currentTab === "quiz-fill") {
-          tip = FILL_QUESTIONS[fillIndex].tip;
+          if (randomizedFillQuestions.length > 0) {
+            tip = randomizedFillQuestions[fillIndex].tip;
+          } else {
+            tip = FILL_QUESTIONS[fillIndex].tip;
+          }
         } else if (currentTab === "quiz-tf") {
           tip = OWL_TIPS["quiz-tf"][tfIndex];
         } else if (currentTab === "quiz-match") {
@@ -979,7 +1003,7 @@
       }, 300);
     }
 
-    // --- 模式一：閃卡處理 ---
+    // --- 模式一：知識閃卡 ---
     function renderFlashcard() {
       const data = FLASHCARDS[fcIndex];
       const card = document.getElementById("flashcard-element");
@@ -1016,8 +1040,8 @@
       renderFlashcard();
     }
 
-    function speakFlashcardText(e) {
-      e.stopPropagation(); // 阻止卡片翻面
+    function speakFlashcardText(event) {
+      event.stopPropagation(); // 阻止卡片翻面
       const data = FLASHCARDS[fcIndex];
       speakText(`${data.title}。${data.desc}`);
     }
@@ -1027,19 +1051,22 @@
       speakText(data.title);
     }
 
-    // --- 模式二：填充題處理 ---
+    // --- 模式二：供詞填充 ---
     function renderFillQuestion() {
-      const q = FILL_QUESTIONS[fillIndex];
+      if (randomizedFillQuestions.length === 0) {
+        initRandomQuestions();
+      }
+      const q = randomizedFillQuestions[fillIndex];
       selectedAnswer = ""; 
 
       document.getElementById("fill-level-badge").innerText = q.level;
       document.getElementById("fill-topic").innerHTML = `<span>💡</span> 主題：${q.topic}`;
-      document.getElementById("fill-progress").innerText = `${fillIndex + 1} / ${FILL_QUESTIONS.length}`;
+      document.getElementById("fill-progress").innerText = `${fillIndex + 1} / ${randomizedFillQuestions.length}`;
 
       const rawText = q.text;
       const bracketRegex = /\[(.*?)\]/g;
       
-      // 建立更顯眼的大字體可交互填充氣泡（粉彩、無黑邊與舒服邊框，字體升級至 text-2xl）
+      // 建立可交互填充氣泡
       let formattedHtml = rawText.replace(bracketRegex, (match, word) => {
         return `<span id="fill-blank" class="inline-block border-2 border-dashed border-sky-300 bg-sky-50/50 text-sky-700 font-extrabold px-6 py-2 rounded-full min-w-[160px] text-center mx-1.5 shadow-sm cursor-pointer hover:scale-105 active:scale-95 transition-all duration-200 text-2xl">❓ 點擊填入</span>`;
       });
@@ -1052,7 +1079,7 @@
 
       const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
 
-      // 馬卡龍粉彩配色組（去除了硬框硬線）
+      // 馬卡龍粉彩配色組
       const blockColors = [
         "bg-pink-50 hover:bg-pink-100 border-pink-100 text-pink-700",
         "bg-sky-50 hover:bg-sky-100 border-sky-100 text-sky-700",
@@ -1063,7 +1090,6 @@
       shuffledOptions.forEach((opt, idx) => {
         const btn = document.createElement("button");
         const colorClass = blockColors[idx % blockColors.length];
-        // 放大為 text-2xl 與中大螢幕下的 text-3xl，搭配更寬鬆的 px-4 與 py-4，並設定 w-full 以拍齊整行
         btn.className = `fill-opt-btn w-full text-center hover:scale-[1.05] border font-black text-2xl sm:text-3xl px-4 py-4 rounded-2xl soft-card-shadow transition-all duration-200 ${colorClass}`;
         btn.innerText = opt;
         btn.onclick = () => selectFillOption(opt, btn);
@@ -1109,7 +1135,7 @@
         return;
       }
 
-      const q = FILL_QUESTIONS[fillIndex];
+      const q = randomizedFillQuestions[fillIndex];
       const targetRegex = /\[(.*?)\]/g;
       const matches = [...q.text.matchAll(targetRegex)];
       
@@ -1127,19 +1153,24 @@
         score += 15;
         updateScore();
         triggerSuccessConfetti();
-        // 成功加回「答對了！」的廣東話發音
         speakText("答對了！"); 
-        updateOwlTip("太棒了！全對！點擊「下一題」看更多好玩的！🦉🌟");
+        updateOwlTip("太棒了！全對！等一下會自動前進到下一題喔！🦉🌟");
 
         blank.className = "inline-block border-2 border-emerald-300 bg-emerald-50 text-emerald-700 font-extrabold px-6 py-2 rounded-full min-w-[160px] text-center mx-1.5 animate-bounce text-2xl";
         
         feedbackBar.className = "p-3 rounded-2xl text-center text-sm font-black my-2 bg-emerald-50 text-emerald-700 border border-emerald-100";
-        feedbackBar.innerText = "🎉 答對了！你真優秀！";
+        feedbackBar.innerText = "🎉 答對了！自動前進下一題中...";
 
         document.querySelectorAll(".fill-opt-btn").forEach(btn => btn.disabled = true);
         
         document.getElementById("fill-check-btn").classList.add("hidden");
         document.getElementById("fill-next-btn").classList.remove("hidden");
+
+        // 答對後自動在 2.5 秒後跳到下一題
+        setTimeout(() => {
+          nextFillQuestion();
+        }, 2500);
+
       } else {
         playSound('incorrect');
         speakText("唔，不對喔。再想一想！");
@@ -1159,12 +1190,17 @@
     }
 
     function nextFillQuestion() {
-      fillIndex = (fillIndex + 1) % FILL_QUESTIONS.length;
+      fillIndex++;
+      // 若 41 題全部完成，則重新打亂
+      if (fillIndex >= randomizedFillQuestions.length) {
+        speakText("你太厲害了！答完了所有溫習題目，我們重新打亂題目再來一次吧！");
+        initRandomQuestions();
+      }
       renderFillQuestion();
     }
 
     function speakFillQuestion() {
-      const q = FILL_QUESTIONS[fillIndex];
+      const q = randomizedFillQuestions[fillIndex];
       const readableText = q.text.replace(/\[.*?\]/g, " 甚麼 ");
       speakText(readableText);
     }
@@ -1239,7 +1275,6 @@
       leftItems.forEach(item => {
         const btn = document.createElement("button");
         btn.id = `match-left-${item.id}`;
-        // 加上凸出拼圖卡片樣式 puzzle-left 以及動畫漸變（改為輕柔細緻灰白與藍色相接線）
         btn.className = "puzzle-left w-full text-left bg-gradient-to-r from-blue-50/50 to-indigo-50/50 border border-slate-100 hover:border-indigo-300 text-slate-700 font-extrabold p-4 rounded-2xl soft-card-shadow hover:scale-[1.01] transition-all text-sm sm:text-base flex items-center justify-between";
         btn.innerHTML = `<span class="flex items-center gap-2"><span class="text-indigo-500 font-extrabold">Q.</span> <span>${item.left}</span></span> <i class="fa-solid fa-puzzle-piece text-indigo-300 text-lg"></i>`;
         btn.onclick = () => selectLeftMatching(item.id, btn);
@@ -1249,7 +1284,6 @@
       rightItems.forEach(item => {
         const btn = document.createElement("button");
         btn.id = `match-right-${item.id}`;
-        // 加上凹入拼圖卡片樣式 puzzle-right 以及凹陷動畫（改為輕柔細緻灰白與條色相接線）
         btn.className = "puzzle-right w-full text-right bg-gradient-to-l from-orange-50/50 to-amber-50/50 border border-slate-100 hover:border-amber-300 text-slate-700 font-extrabold p-4 rounded-2xl soft-card-shadow hover:scale-[1.01] transition-all text-sm sm:text-base flex items-center justify-between";
         btn.innerHTML = `<i class="fa-solid fa-puzzle-piece text-amber-300 text-lg"></i> <span class="flex items-center gap-2"><span>${item.right}</span></span>`;
         btn.onclick = () => selectRightMatching(item.id, btn);
@@ -1407,6 +1441,9 @@
 
     // --- 設定 window.onload 起始載入程序 ---
     window.onload = function() {
+      // 優先初始化隨機填充題庫
+      initRandomQuestions();
+
       switchTab("flashcard");
       renderFlashcard();
       renderFillQuestion();
