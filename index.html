@@ -41,7 +41,7 @@
       animation: gentle-float 4s ease-in-out infinite;
     }
 
-    /* 卡片雙面翻轉效果（全面移除粗黑邊框） */
+    /* 卡片雙面翻轉效果（全面移除粗黑邊） */
     .flip-card {
       background-color: transparent;
       perspective: 1000px;
@@ -128,83 +128,76 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between text-slate-700">
 
-  <header class="bg-white border-b border-slate-100 p-4 shadow-sm text-slate-800">
-    <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-      <div class="flex items-center gap-3">
-        <span class="text-4xl animate-float select-none">🎈</span>
-        <div>
-          <h1 class="text-2xl font-black playful-title tracking-wider text-sky-600 flex items-center gap-2">
-            真道人文大冒險 <span class="text-xl">⭐</span>
-          </h1>
-          <p class="text-xs font-bold text-slate-400">第二次總結性評估（單元三、四、五）溫習</p>
-        </div>
-      </div>
-      <div class="flex items-center gap-3">
-        <div class="flex items-center gap-2 bg-amber-50 border border-amber-200 px-4 py-1.5 rounded-full text-sm font-black shadow-sm">
+  <!-- 頂部置中大標題（夢幻漸變馬卡龍底色版） -->
+  <header class="p-6 text-center select-none">
+    <div class="max-w-4xl mx-auto flex flex-col items-center gap-4">
+      
+      <!-- 控制按鈕列 (Mute + Score) -->
+      <div class="w-full flex items-center justify-between px-2 mb-1">
+        <button onclick="toggleAudioMute()" id="mute-btn" class="bg-white hover:bg-slate-50 border border-slate-200 text-slate-600 px-4 py-2 rounded-2xl shadow-sm transition flex items-center gap-2 font-bold text-sm" title="靜音切換">
+          <i id="mute-icon" class="fa-solid fa-volume-high"></i>
+          <span>聲音開關</span>
+        </button>
+        
+        <div class="flex items-center gap-2 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 px-5 py-2 rounded-2xl text-sm font-black shadow-sm">
           <span class="text-lg">🏆</span>
           <span class="text-amber-800">積木得分：<span id="score-display" class="text-base text-rose-500">0</span> 分</span>
         </div>
-        <button onclick="toggleAudioMute()" id="mute-btn" class="bg-slate-50 hover:bg-slate-100 border border-slate-200 p-2.5 rounded-full transition text-sm" title="靜音切換">
-          <i id="mute-icon" class="fa-solid fa-volume-high text-slate-600"></i>
-        </button>
       </div>
+
+      <!-- 夢幻漸變置中大標板 -->
+      <div class="inline-block w-full bg-gradient-to-r from-pink-100 via-sky-100 to-emerald-100 p-1.5 rounded-[32px] soft-card-shadow">
+        <div class="bg-white px-8 py-6 rounded-[26px] flex flex-col items-center">
+          <h1 class="text-3xl sm:text-5xl font-black playful-title tracking-wider text-sky-600 flex items-center gap-3 justify-center animate-float">
+            <span>🎈</span> 真道人文大冒險 <span class="text-2xl sm:text-3xl text-amber-400">⭐</span>
+          </h1>
+          <p class="text-xs sm:text-sm font-black text-slate-400 mt-2 tracking-wide uppercase">
+            第二次總結性評估（單元三、四、五）繽紛天地溫習教材
+          </p>
+        </div>
+      </div>
+
     </div>
   </header>
 
   <!-- 主要學習區域 -->
-  <main class="max-w-4xl w-full mx-auto p-4 flex-grow flex flex-col gap-4">
-    
-    <!-- 貓頭鷹博士小對話盒：無粗黑邊，柔和溫暖 -->
-    <div id="helper-box" class="bg-amber-50 border border-amber-200 rounded-3xl p-5 soft-card-shadow flex items-start gap-4 transition-all duration-300 transform">
-      <div class="text-5xl shrink-0 select-none animate-float" id="helper-owl-emoji">🦉</div>
-      <div class="flex-grow">
-        <div class="flex items-center gap-2 flex-wrap mb-1">
-          <span class="font-black text-amber-800 text-lg playful-title">貓頭鷹博士 Dr. Owl</span>
-          <button onclick="speakCurrentTip()" class="bg-amber-400 hover:bg-amber-500 active:scale-95 text-amber-950 text-xs px-3.5 py-1.5 rounded-full flex items-center gap-1.5 transition font-black shadow-sm">
-            <i class="fa-solid fa-volume-high"></i> 聽讀廣東話
-          </button>
-        </div>
-        <p id="helper-text" class="text-amber-900/80 font-bold text-base leading-relaxed">
-          哈囉！我是貓頭鷹博士！準備好跟我一起挑戰單元三至五的人文科重要概念嗎？點擊下面的按鈕，選擇你想挑戰的關卡吧！
-        </p>
-      </div>
-    </div>
+  <main class="max-w-4xl w-full mx-auto p-4 flex-grow flex flex-col gap-5">
 
-    <!-- 導航切換：改用極其柔和且精緻的粉色系無邊框卡片 -->
+    <!-- 學習模式導航（字體大幅放大且加粗） -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3.5">
-      <button onclick="switchTab('flashcard')" id="nav-flashcard" class="tab-btn hover:scale-[1.02] bg-white text-slate-700 font-black p-4 rounded-3xl border border-slate-100 soft-card-shadow flex flex-col items-center gap-1.5 transition-all">
-        <span class="text-3xl animate-pulse">💡</span>
-        <span class="text-sm">知識閃卡</span>
+      <button onclick="switchTab('flashcard')" id="nav-flashcard" class="tab-btn hover:scale-[1.03] bg-white text-slate-700 font-black p-4 md:p-5 rounded-3xl border border-slate-100 soft-card-shadow flex flex-col items-center gap-2 transition-all">
+        <span class="text-3xl md:text-4xl">💡</span>
+        <span class="text-base md:text-lg lg:text-xl tracking-wider">知識閃卡</span>
       </button>
-      <button onclick="switchTab('quiz-fill')" id="nav-quiz-fill" class="tab-btn hover:scale-[1.02] bg-white text-slate-700 font-black p-4 rounded-3xl border border-slate-100 soft-card-shadow flex flex-col items-center gap-1.5 transition-all">
-        <span class="text-3xl animate-pulse">📝</span>
-        <span class="text-sm">供詞填充</span>
+      <button onclick="switchTab('quiz-fill')" id="nav-quiz-fill" class="tab-btn hover:scale-[1.03] bg-white text-slate-700 font-black p-4 md:p-5 rounded-3xl border border-slate-100 soft-card-shadow flex flex-col items-center gap-2 transition-all">
+        <span class="text-3xl md:text-4xl">📝</span>
+        <span class="text-base md:text-lg lg:text-xl tracking-wider">供詞填充</span>
       </button>
-      <button onclick="switchTab('quiz-tf')" id="nav-quiz-tf" class="tab-btn hover:scale-[1.02] bg-white text-slate-700 font-black p-4 rounded-3xl border border-slate-100 soft-card-shadow flex flex-col items-center gap-1.5 transition-all">
-        <span class="text-3xl animate-pulse">❓</span>
-        <span class="text-sm">是非挑戰</span>
+      <button onclick="switchTab('quiz-tf')" id="nav-quiz-tf" class="tab-btn hover:scale-[1.03] bg-white text-slate-700 font-black p-4 md:p-5 rounded-3xl border border-slate-100 soft-card-shadow flex flex-col items-center gap-2 transition-all">
+        <span class="text-3xl md:text-4xl">❓</span>
+        <span class="text-base md:text-lg lg:text-xl tracking-wider">是非挑戰</span>
       </button>
-      <button onclick="switchTab('quiz-match')" id="nav-quiz-match" class="tab-btn hover:scale-[1.02] bg-white text-slate-700 font-black p-4 rounded-3xl border border-slate-100 soft-card-shadow flex flex-col items-center gap-1.5 transition-all">
-        <span class="text-3xl animate-pulse">🧩</span>
-        <span class="text-sm">趣味配對</span>
+      <button onclick="switchTab('quiz-match')" id="nav-quiz-match" class="tab-btn hover:scale-[1.03] bg-white text-slate-700 font-black p-4 md:p-5 rounded-3xl border border-slate-100 soft-card-shadow flex flex-col items-center gap-2 transition-all">
+        <span class="text-3xl md:text-4xl">🧩</span>
+        <span class="text-base md:text-lg lg:text-xl tracking-wider">趣味配對</span>
       </button>
     </div>
 
-    <!-- 核心工作卡片區（無黑邊、高雅圓角軟陰影） -->
-    <div class="bg-white rounded-3xl p-6 border border-slate-100 soft-card-shadow flex-grow min-h-[440px] flex flex-col justify-between">
+    <!-- 核心工作卡片區（高雅圓角軟陰影） -->
+    <div class="bg-white rounded-[32px] p-6 md:p-8 border border-slate-50 soft-card-shadow flex-grow min-h-[440px] flex flex-col justify-between">
       
-      <!-- 模式一：知識閃卡 -->
+      <!-- 閃卡內容 -->
       <div id="tab-flashcard" class="tab-content hidden flex-col justify-between h-full gap-4">
         <div>
           <div class="flex items-center justify-between mb-2">
-            <h2 class="text-2xl font-black text-indigo-600 flex items-center gap-2 playful-title">
+            <h2 class="text-xl md:text-2xl font-black text-indigo-600 flex items-center gap-2 playful-title">
               <span>💡</span> 核心詞彙知識閃卡
             </h2>
-            <span class="text-sm bg-indigo-50 text-indigo-600 border border-indigo-100 px-3 py-1 rounded-full font-black" id="flashcard-progress">1 / 10</span>
+            <span class="text-sm bg-indigo-50 text-indigo-600 border border-indigo-100 px-3.5 py-1 rounded-full font-black" id="flashcard-progress">1 / 10</span>
           </div>
           <p class="text-xs text-slate-400 mb-4 font-bold">點擊卡片可以翻看解釋或圖片，按下方按鈕切換下一張卡片。</p>
 
-          <!-- 翻轉卡片主體（改為精緻圓滑無黑框風格） -->
+          <!-- 翻轉卡片主體 -->
           <div class="flex justify-center my-4">
             <div onclick="toggleFlashcard()" class="flip-card w-full max-w-sm h-72 cursor-pointer" id="flashcard-element">
               <div class="flip-card-inner h-full rounded-3xl soft-card-shadow border border-slate-100">
@@ -253,12 +246,12 @@
         </div>
       </div>
 
-      <!-- 模式二：供詞填充 -->
+      <!-- 供詞填充內容 -->
       <div id="tab-quiz-fill" class="tab-content hidden flex-col justify-between h-full gap-4">
         <div>
           <div class="flex items-center justify-between mb-2">
-            <h2 class="text-2xl font-black text-amber-600 flex items-center gap-2 playful-title">
-              <span>🧸</span> 供詞填充大挑戰（全範圍41題）
+            <h2 class="text-xl md:text-2xl font-black text-amber-600 flex items-center gap-2 playful-title">
+              <span>🧸</span> 供詞填充大挑戰（隨機41題）
             </h2>
             <div class="flex items-center gap-2">
               <span id="fill-level-badge" class="text-xs font-black bg-amber-100 text-amber-800 border border-amber-200 px-2.5 py-1 rounded-lg">第一關</span>
@@ -273,7 +266,7 @@
             <button onclick="speakFillQuestion()" class="text-amber-700 hover:underline flex items-center gap-1 font-bold"><i class="fa-solid fa-volume-high"></i> 聽讀題目</button>
           </div>
 
-          <!-- 填充主體區（紙卷溫和風格，完全無硬框） -->
+          <!-- 填充主體區 -->
           <div class="bg-amber-50/30 border-2 border-amber-100 rounded-3xl p-6 my-4 text-xl font-black leading-loose text-slate-700 soft-feedback-shadow relative" id="fill-question-container">
             <!-- 動態生成填充內容 -->
           </div>
@@ -301,31 +294,39 @@
         </div>
       </div>
 
-      <!-- 模式三：是非挑戰 -->
+      <!-- 是非挑戰內容 -->
       <div id="tab-quiz-tf" class="tab-content hidden flex-col justify-between h-full gap-4">
         <div>
           <div class="flex items-center justify-between mb-2">
-            <h2 class="text-2xl font-black text-emerald-600 flex items-center gap-2 playful-title">
-              <span>❓</span> 是非智慧安全挑戰賽
+            <h2 class="text-xl md:text-2xl font-black text-emerald-600 flex items-center gap-2 playful-title">
+              <span>❓</span> 是非智慧安全挑戰賽（隨機40題）
             </h2>
-            <span class="text-sm bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full font-black" id="tf-progress">1 / 6</span>
+            <span class="text-sm bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full font-black" id="tf-progress">1 / 40</span>
           </div>
-          <p class="text-xs text-slate-400 mb-4 font-bold">小一常識題！判斷以下行為在生活中是「正確/安全」還是「錯誤/危險」！</p>
+          <p class="text-xs text-slate-400 mb-3 font-bold">小一常識題！判斷以下行為在生活中是「正確/安全」還是「錯誤/危險」！</p>
+
+          <!-- 聽讀題目列 -->
+          <div class="bg-emerald-50/50 p-3 rounded-2xl border border-emerald-100 text-xs text-emerald-800 font-black mb-4 flex items-center justify-between">
+            <span id="tf-topic" class="flex items-center gap-1"><span>💡</span> 主題：生活常識與危機處理</span>
+            <button onclick="speakTFQuestion()" class="text-emerald-700 hover:underline flex items-center gap-1 font-bold">
+              <i class="fa-solid fa-volume-high"></i> 聽讀是非題目
+            </button>
+          </div>
 
           <!-- SVG 插圖展示區 -->
           <div class="flex justify-center my-2" id="tf-visual-container">
             <!-- 動態生成 SVG 示意圖 -->
           </div>
 
-          <!-- 是非題題目文本（改為清新軟底色） -->
-          <div class="bg-emerald-50/50 p-5 rounded-2xl border-2 border-emerald-100 text-lg font-bold text-slate-700 text-center my-4 leading-relaxed" id="tf-question-text">
+          <!-- 是非題題目文本（字體超大，超級顯眼） -->
+          <div class="bg-emerald-50/50 p-6 rounded-3xl border-2 border-emerald-100 text-2xl sm:text-3xl font-extrabold text-slate-700 text-center my-4 leading-relaxed" id="tf-question-text">
             <!-- 題目載入位置 -->
           </div>
         </div>
 
         <div id="tf-feedback-bar" class="hidden p-3 rounded-2xl text-center text-sm font-black my-2 soft-feedback-shadow"></div>
 
-        <!-- 選擇按鈕（改成高質感粉彩大按鈕） -->
+        <!-- 選擇按鈕 -->
         <div class="flex flex-col sm:flex-row gap-4 mt-4 border-t border-slate-100 pt-4">
           <button onclick="submitTFAnswer(true)" class="flex-1 bg-emerald-400 hover:bg-emerald-500 text-white font-black py-4 px-6 rounded-2xl soft-card-shadow transition active:scale-95 flex flex-col items-center justify-center gap-1.5 text-lg">
             <span class="text-4xl">⭕</span>
@@ -338,11 +339,11 @@
         </div>
       </div>
 
-      <!-- 模式四：趣味配對 -->
+      <!-- 趣味配對內容 -->
       <div id="tab-quiz-match" class="tab-content hidden flex-col justify-between h-full gap-4">
         <div>
           <div class="flex items-center justify-between mb-2">
-            <h2 class="text-2xl font-black text-sky-600 flex items-center gap-2 playful-title">
+            <h2 class="text-xl md:text-2xl font-black text-sky-600 flex items-center gap-2 playful-title">
               <span>🧩</span> 拼圖連連看趣味配對
             </h2>
             <button onclick="resetMatching()" class="text-xs bg-slate-50 hover:bg-slate-100 px-3 py-1.5 rounded-lg text-slate-500 font-bold border border-slate-200 transition flex items-center gap-1 shadow-sm">
@@ -351,14 +352,14 @@
           </div>
           <p class="text-xs text-slate-400 mb-4 font-bold">請點選左邊凸起拼圖的「題目卡」，再點選右邊凹陷拼圖的「答案卡」進行合體拼裝！</p>
 
-          <!-- 拼圖排版配對面板 -->
+          <!-- 拼圖配對面板 -->
           <div class="grid grid-cols-2 gap-x-8 gap-y-3.5 my-4">
-            <!-- 左欄：題目拼圖 (凸出) -->
+            <!-- 左欄：題目 -->
             <div class="flex flex-col gap-3.5" id="match-left-column">
               <!-- 動態凸拼圖按鈕 -->
             </div>
 
-            <!-- 右欄：答案拼圖 (凹入) -->
+            <!-- 右欄：答案 -->
             <div class="flex flex-col gap-3.5" id="match-right-column">
               <!-- 動態凹拼圖按鈕 -->
             </div>
@@ -372,6 +373,22 @@
 
     </div>
 
+    <!-- 貓頭鷹博士助手盒（已移動到最下方） -->
+    <div id="helper-box" class="bg-amber-50 border border-amber-200 rounded-[28px] p-5 soft-card-shadow flex items-start gap-4 transition-all duration-300 transform">
+      <div class="text-5xl shrink-0 select-none animate-float" id="helper-owl-emoji">🦉</div>
+      <div class="flex-grow">
+        <div class="flex items-center gap-2 flex-wrap mb-1">
+          <span class="font-black text-amber-800 text-lg playful-title">貓頭鷹博士 Dr. Owl</span>
+          <button onclick="speakCurrentTip()" class="bg-amber-400 hover:bg-amber-500 active:scale-95 text-amber-950 text-xs px-3.5 py-1.5 rounded-full flex items-center gap-1.5 transition font-black shadow-sm">
+            <i class="fa-solid fa-volume-high"></i> 聽讀廣東話
+          </button>
+        </div>
+        <p id="helper-text" class="text-amber-900/80 font-bold text-base leading-relaxed">
+          哈囉！我是貓頭鷹博士！準備好跟我一起挑戰單元三至五的人文科重要概念嗎？點擊下面的按鈕，選擇你想挑戰的關卡吧！
+        </p>
+      </div>
+    </div>
+
   </main>
 
   <!-- 頁腳 -->
@@ -382,23 +399,24 @@
     </div>
   </footer>
 
+  <!-- 遊戲核心數據與控制邏輯 -->
   <script>
-    // --- 遊戲核心邏輯全域變數 ---
     let fcIndex = 0;
     let fillIndex = 0;
     let tfIndex = 0;
     let score = 0;
     let currentTab = "flashcard";
 
-    // 儲存隨機打亂後的填充題陣列
+    // 隨機題庫專用陣列
     let randomizedFillQuestions = [];
+    let randomizedTFQuestions = [];
 
     // 配對邏輯狀態變數
     let selectedLeftId = null;
     let selectedRightId = null;
     let matchedPairs = [];
 
-    // --- 音效模擬引擎 (Web Audio API) ---
+    // 音效模擬變數
     let audioContext = null;
     let isMuted = false;
 
@@ -447,7 +465,6 @@
       }
     }
 
-    // --- 廣東話語音朗讀系統 (SpeechSynthesis) ---
     function speakText(text) {
       if (isMuted || !window.speechSynthesis) return;
       window.speechSynthesis.cancel();
@@ -465,7 +482,6 @@
       speakText(helperText);
     }
 
-    // --- 貓頭鷹博士小貼士數據 ---
     const OWL_TIPS = {
       flashcard: [
         "大掃除能去舊迎新！把霉運通通掃走，家裡乾淨、心情好！",
@@ -476,7 +492,7 @@
         "復活節是外地傳來的節日，紀念耶穌在死後第三天復活，帶來希望！",
         "聖誕節是十二月二十五日，慶祝救主耶穌誕生。大家會高興地唱詩歌！",
         "五星紅旗是我們國家的象徵，看見升國旗時要注目、站好！",
-        "國徽包含齒輪和麥穗，天安門和國旗在最上方，代表我們莊嚴的祖國！",
+        "國徽包含齒輪 and 麥穗，天安門和國旗在最上方，代表我們莊嚴的祖國！",
         "安全使用能源，遠離廚房和燙手物品。不輕易給陌生人開門！"
       ],
       "quiz-fill": [
@@ -492,19 +508,18 @@
         "在家如果不小心跌倒受傷，一定要第一時間找誰幫忙處理？"
       ],
       "quiz-tf": [
-        "第一題：在廚房內跟媽媽推撞，可能導致熱水打翻而嚴重燙傷，這絕對不可以喔！",
-        "第二題：如果家裡突然起火，絕對不可以躲進衣櫃，否則吸入濃煙會非常危險！",
-        "第三題：如果發生火警、受傷、或洩漏煤氣，應該在安全地方撥打哪個緊急求助電話？",
-        "第四題：稱呼要叫對：爸爸的姐姐或妹妹是姑母（姑姐），媽媽的才是姨母（阿姨）喔！",
-        "第五題：在莊嚴的升國旗奏國歌典禮時，大家一定要站直、不說話，注目肅立！",
-        "第六題：去山上掃墓，必須在確定所有火種完全熄滅才可以離開，保護大自然！"
+        "小朋友，聽聽看題目說的行為，在我們的日常生活中是安全的還是危險的呢？",
+        "如果家裡突然起火，躲在衣櫃裡是否能避開濃煙呢？想一想！",
+        "發生火災、有人受傷、或者聞到刺鼻的煤氣味時，應該打哪個緊急電話？",
+        "對長輩的稱謂要禮貌且正確：媽媽的姊妹在廣東話稱呼為什麼？",
+        "在莊嚴的學校升旗典禮中，我們應當如何站立，雙眼注視著國旗呢？",
+        "在山上掃墓過後，我們能直接走掉、留下一點點微弱的火苗嗎？"
       ],
       "quiz-match": [
         "親戚長輩常往來。爸爸的父母叫「祖父祖母」，媽媽的父母叫「外祖父外祖母」喔！點擊左、右進行配對！"
       ]
     };
 
-    // --- 41題供詞填充數據（包含全部核心字詞） ---
     const FILL_QUESTIONS = [
       {
         text: "我們每天生活在一起，互相關心、互相愛護的親密成員，就是我們的 [家人] 。",
@@ -636,7 +651,7 @@
         text: "在狹窄的客廳裡追逐奔跑，容易撞到堅硬的桌角，導致身體 [撞傷] 淤青。",
         options: ["撞傷", "凍傷", "割傷", "燙傷"],
         topic: "客廳安全防護 🛋️",
-        level: "第十九關",
+        level: "十九關",
         tip: "身體大力碰擊到硬物，皮膚變得又紅又青，叫？"
       },
       {
@@ -795,7 +810,300 @@
       }
     ];
 
-    // --- 閃卡資料 (用於閃卡Tab展示) ---
+    const TF_QUESTIONS = [
+      {
+        text: "六歲的弟弟在廚房內貪玩撞向正拿著滾燙熱水的媽媽，導致熱水打翻燙傷姐姐。這件事情告訴我們，小朋友絕對不應該在廚房玩耍。",
+        answer: true,
+        category: "安全行為",
+        tip: "沒錯！廚房裡有熱水、刀具、爐火，非常多危險，絕對不是遊戲玩耍的地方！",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><rect width="100" height="80" fill="#fee2e2" rx="12" stroke="#ef4444" stroke-width="3"/><path d="M50,15 L85,65 L15,65 Z" fill="#ef4444"/><text x="50" y="58" font-size="35" fill="#ffffff" font-weight="bold" text-anchor="middle">!</text></svg>`
+      },
+      {
+        text: "若看到廚房的報紙被爐火燒着（起火），我們應該立即躲在衣櫃裏自己玩玩具，不理會它。",
+        answer: false,
+        category: "安全行為",
+        tip: "起火是非常嚴重的危險！應該大聲呼叫家人，在安全情況下報警，絕不能躲起來。",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><rect width="100" height="80" fill="#fff7ed" rx="12" stroke="#ea580c" stroke-width="3"/><path d="M40,55 C40,40 50,25 50,25 C50,25 60,40 60,55 Z" fill="#ea580c"/><path d="M45,55 C45,45 50,35 50,35 C50,35 55,45 55,55 Z" fill="#f97316"/></svg>`
+      },
+      {
+        text: "當我們遇到煤氣洩漏、火警等非常緊急需要報警求助的情況時，在香港應該撥打「999」求助。",
+        answer: true,
+        category: "緊急求助常識",
+        tip: "沒錯！香港的緊急求助電話是999。但平常沒有緊急事情絕對不可以亂撥！",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><rect width="100" height="80" fill="#ecfdf5" rx="12" stroke="#10b981" stroke-width="3"/><text x="50" y="48" font-size="28" fill="#047857" font-weight="bold" text-anchor="middle">999</text></svg>`
+      },
+      {
+        text: "爸爸媽媽兩邊的親戚常有往來。其中爸爸的姊姊或妹妹，我們應該稱呼為「姨母」。",
+        answer: false,
+        category: "親戚稱謂",
+        tip: "不對喔！爸爸的姊妹我們應該稱呼為「姑母/姑姐」，媽媽的姊妹才稱呼為「姨母」。",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><circle cx="50" cy="40" r="30" fill="#fef08a"/><path d="M40,35 Q50,45 60,35" stroke="#ca8a04" stroke-width="3" fill="none"/><circle cx="42" cy="30" r="3" fill="#ca8a04"/><circle cx="58" cy="30" r="3" fill="#ca8a04"/><rect x="46" y="45" width="8" height="15" fill="#ca8a04"/></svg>`
+      },
+      {
+        text: "在莊嚴的升國旗、奏唱國歌儀式中，我們應該在台下高興地和隔壁同學玩耍、吃零食和追逐。",
+        answer: false,
+        category: "尊重國家象徵",
+        tip: "不對喔！我們應當保持嚴肅、在原地「注目肅立」，這才是尊重國家及禮貌的表現。",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><rect width="100" height="80" fill="#f1f5f9" rx="12" stroke="#64748b" stroke-width="3"/><line x1="50" y1="15" x2="50" y2="65" stroke="#475569" stroke-width="4"/><rect x="50" y="15" width="25" height="18" fill="#ef4444"/></svg>`
+      },
+      {
+        text: "重陽節去登高、掃墓，在點燃香燭祭拜後，必須確定火種完全熄滅才可離開，以防止山火發生。",
+        answer: true,
+        category: "重陽山林防火",
+        tip: "非常正確！確定火種完全熄滅非常重要，否則很容易引起山林大火！",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><rect width="100" height="80" fill="#fff1f2" rx="12" stroke="#f43f5e" stroke-width="3"/><path d="M30,55 L70,55 L50,25 Z" fill="#fda4af"/><path d="M45,55 L55,55 L50,40 Z" fill="#f43f5e"/></svg>`
+      },
+      {
+        text: "媽媽的兄弟，我們應該稱呼他為「舅父」。",
+        answer: true,
+        category: "親戚稱謂",
+        tip: "非常正確！媽媽的兄弟我們叫舅父，媽媽的姊妹我們則叫阿姨（姨母）。",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><circle cx="50" cy="40" r="28" fill="#e0f2fe"/><path d="M42,32 L48,32 M52,32 L58,32" stroke="#0284c7" stroke-width="3"/><circle cx="50" cy="40" r="3" fill="#0284c7"/></svg>`
+      },
+      {
+        text: "爸爸的兄弟，我們應該稱呼他為「叔叔」或「伯伯」。",
+        answer: true,
+        category: "親戚稱謂",
+        tip: "答對了！爸爸的哥哥叫伯伯，爸爸的弟弟叫叔叔，他們都是親切的長輩。",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><circle cx="50" cy="40" r="28" fill="#fef3c7"/><path d="M38,38 Q50,48 62,38" stroke="#d97706" stroke-width="3" fill="none"/></svg>`
+      },
+      {
+        text: "媽媽的父母，我們應該稱呼他們為「爺爺」和「嫲嫲」。",
+        answer: false,
+        category: "親戚稱謂",
+        tip: "不對喔！媽媽的父母我們稱呼為「公公（外祖父）」和「婆婆（外祖母）」。",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><circle cx="35" cy="40" r="20" fill="#f3e8ff"/><circle cx="65" cy="40" r="20" fill="#fae8ff"/></svg>`
+      },
+      {
+        text: "玩完積木和玩具後，應該全部留給媽媽一個人去收拾，我自己去睡覺或看電視。",
+        answer: false,
+        category: "做家務責任",
+        tip: "不對喔！自己的玩具要自己動手收拾整齊，這才是體貼父母、愛護安樂窩的好孩子！",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><rect x="30" y="30" width="40" height="30" fill="#fed7aa" rx="6"/><circle cx="50" cy="45" r="8" fill="#ef4444"/></svg>`
+      },
+      {
+        text: "看見客廳或浴室的地板上有積水，我們要立刻用乾布擦乾，以防家人滑倒跌傷。",
+        answer: true,
+        category: "家居安全預防",
+        tip: "沒錯！地板有水非常容易讓人滑倒而跌傷，立刻擦乾是負責且安全的行為！",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><ellipse cx="50" cy="55" rx="35" ry="10" fill="#bae6fd"/><path d="M45,20 L55,45" stroke="#0284c7" stroke-width="4"/></svg>`
+      },
+      {
+        text: "洗完手後，可以用濕漉漉的手直接去觸摸或拔掉冷氣機和電視機的電器插頭。",
+        answer: false,
+        category: "用電安全",
+        tip: "這太危險了！濕手觸摸插頭非常容易發生「觸電」意外，一定要用乾毛巾把手擦乾！",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><path d="M50,15 L60,40 L40,40 Z" fill="#eab308"/><path d="M50,45 L50,65" stroke="#ef4444" stroke-width="5"/></svg>`
+      },
+      {
+        text: "吃完零食的果皮和廢紙，可以隨手塞進沙發的縫隙裏藏起來，不用丟進垃圾桶。",
+        answer: false,
+        category: "家居衛生",
+        tip: "不可以！這樣做會滋生蚊蟲和細菌，影響家居衛生。垃圾一定要丟進垃圾桶！",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><rect x="35" y="25" width="30" height="45" fill="#cbd5e1" rx="4"/><line x1="45" y1="35" x2="55" y2="35" stroke="#94a3b8" stroke-width="3"/></svg>`
+      },
+      {
+        text: "如果看見桌上有五顏六色、形狀漂亮的藥丸，因為看起來很像糖果，我們可以偷偷拿來吃。",
+        answer: false,
+        category: "家居安全預防",
+        tip: "絕對不可以！那可能是不安全、會中毒的藥物。任何不認識的物品都要詢問家長！",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><circle cx="40" cy="40" r="10" fill="#f43f5e"/><circle cx="60" cy="40" r="10" fill="#3b82f6"/></svg>`
+      },
+      {
+        text: "在推開或關上房間門、抽屜時，動作要慢一點，小心手指被縫隙夾傷。",
+        answer: true,
+        category: "日常安全行為",
+        tip: "沒錯！輕輕開關門，能有效預防「夾傷」意外發生，保護我們的小手。",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><rect x="35" y="15" width="30" height="55" fill="#f59e0b" rx="2"/></svg>`
+      },
+      {
+        text: "在家中如果不小心跌倒受傷流血，因為怕被爸爸媽媽罵，應該偷偷隱瞞，不要告訴大人。",
+        answer: false,
+        category: "家居安全預防",
+        tip: "不對！受傷了必須第一時間找家中的「成人」幫忙處理傷口，避免傷口發炎！",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><path d="M50,15 L85,65 L15,65 Z" fill="#ef4444"/><text x="50" y="58" font-size="30" fill="#ffffff" text-anchor="middle">!</text></svg>`
+      },
+      {
+        text: "爸爸的父母，我們在廣東話中應該稱呼為「爺爺」和「嫲嫲」。",
+        answer: true,
+        category: "親戚稱謂",
+        tip: "沒錯！爸爸的父母就是爺爺和嫲嫲（祖父與祖母），要經常孝敬他們喔！",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><circle cx="50" cy="40" r="25" fill="#dbeafe"/></svg>`
+      },
+      {
+        text: "冷氣機、電視機、洗衣機和雪櫃都是我們家裡常見且需要接電的「電器」。",
+        answer: true,
+        category: "家電常識",
+        tip: "答對了！這些需要接通電力的家用機器，我們合稱之為「電器」。",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><rect x="25" y="20" width="50" height="40" fill="#94a3b8" rx="6"/></svg>`
+      },
+      {
+        text: "「大掃除」是農曆新年前的一項重要傳統習俗，代表著「去舊迎新」的意思。",
+        answer: true,
+        category: "節日傳統習俗",
+        tip: "非常正確！全家人合力大掃除，把骯髒的東西都清理乾淨，準備開開心心迎接新的一年！",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><circle cx="50" cy="40" r="25" fill="#fef3c7"/></svg>`
+      },
+      {
+        text: "在農曆新年時吃香甜的年糕，寓意著我們「步步高升」，學業與身體都越來越好。",
+        answer: true,
+        category: "新年食品含意",
+        tip: "答對了！「年糕」取其諧音「年高」，祝福大家每一年都長得更高、進步更多！",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><ellipse cx="50" cy="45" rx="25" ry="12" fill="#fbbf24"/></svg>`
+      },
+      {
+        text: "「揮春」一般是黑色的，上面寫著生氣和悲傷的話，過年時要貼在垃圾桶旁。",
+        answer: false,
+        category: "新年傳統佈置",
+        tip: "不對喔！揮春是「紅色」的，寫滿吉祥的祝福詞，過年時要貼在門口迎接福氣！",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><rect x="40" y="15" width="20" height="50" fill="#ef4444"/><text x="50" y="45" font-size="20" fill="#fef08a" text-anchor="middle">吉</text></svg>`
+      },
+      {
+        text: "農曆八月十五是端午節，我們全家人會一起在室外一邊賞月，一邊吃粽子和西瓜。",
+        answer: false,
+        category: "傳統節日判斷",
+        tip: "不對不對！農曆八月十五是「中秋節」，我們吃的是「月餅和柚子」，不是端午節喔！",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><circle cx="50" cy="40" r="25" fill="#fef08a"/></svg>`
+      },
+      {
+        text: "中秋節這一天，天上的月亮最圓、最亮，在傳統上這象徵著「全家團圓」。",
+        answer: true,
+        category: "中秋傳統習俗",
+        tip: "答對了！中秋月圓人團圓，全家人一起吃月餅賞月，是十分幸福的事情。",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><rect width="100" height="80" fill="#0f172a" rx="10"/><circle cx="50" cy="40" r="22" fill="#fef08a"/></svg>`
+      },
+      {
+        text: "端午節吃粽子和划龍舟的傳統，相傳是為了尋找並紀念古代偉大的愛國詩人屈原。",
+        answer: true,
+        category: "端午傳統典故",
+        tip: "非常正確！我們包粽子、划龍舟，都是為了紀念屈原這位愛國的歷史人物。",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><polygon points="50,15 20,60 80,60" fill="#16a34a"/></svg>`
+      },
+      {
+        text: "端午節划龍舟時，龍舟上會有一個敲大鼓的人，大家要聽著他的鼓聲合力往前划桨。",
+        answer: true,
+        category: "端午傳統運動",
+        tip: "答對了！大家聽著大鼓「咚！咚！咚！」的節奏合力划船，這體現了「分工合作」的精神！",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><path d="M15,45 Q50,65 85,45 Z" fill="#dc2626"/></svg>`
+      },
+      {
+        text: "重陽節是在秋高氣爽的秋天，有著「登高（爬山）」避疫的傳統民間習俗。",
+        answer: true,
+        category: "重陽傳統習俗",
+        tip: "沒錯！重陽登高可以親近大自然、鍛鍊身體，是傳統中非常健康的活動。",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><path d="M20,65 L50,25 L80,65 Z" fill="#047857"/></svg>`
+      },
+      {
+        text: "重陽節除了去登高，也是我們祭拜祖先（掃墓）、表達孝心和敬老的重要日子。",
+        answer: true,
+        category: "重陽傳統習俗",
+        tip: "答對了！重陽掃墓能讓我們追思祖先，是一個人文關懷與敬老感恩的好日子。",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><rect x="35" y="30" width="30" height="40" fill="#cbd5e1" rx="4"/></svg>`
+      },
+      {
+        text: "每年的十二月二十五日是聖誕節，這個節日是為了紀念救主耶穌基督的降生（出生）。",
+        answer: true,
+        category: "外地傳來節日",
+        tip: "答對了！聖誕節是基督教學校非常重視的西方大節日，慶祝耶穌在馬槽降生。",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><polygon points="50,15 25,50 75,50" fill="#15803d"/></svg>`
+      },
+      {
+        text: "聖誕節期間，商場和尖沙咀都會掛滿繽紛美麗的燈飾，我們可以跟家人一起去看燈飾。",
+        answer: true,
+        category: "聖誕節慶生活",
+        tip: "答對了！繽紛的聖誕燈飾讓節慶氣氛更歡樂，看燈飾也是非常溫馨的家庭活動。",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><circle cx="50" cy="40" r="15" fill="#fef08a"/></svg>`
+      },
+      {
+        text: "在聖誕節的前一晚，唱詩班到各家各戶或者街上唱歌分享耶穌誕生的喜訊，這叫「報佳音」。",
+        answer: true,
+        category: "聖誕傳統活動",
+        tip: "沒錯！「報佳音」就是用溫暖的聖誕詩歌把和平、喜樂的佳音分享給每一個人。",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><path d="M30,30 Q50,15 70,30" stroke="#a855f7" stroke-width="4" fill="none"/></svg>`
+      },
+      {
+        text: "復活節是為了紀念主耶穌基督被釘在十字架死後，於「第三天復活」的偉大日子。",
+        answer: true,
+        category: "外地傳來節日",
+        tip: "答對了！耶穌基督的復活代表了戰勝死亡與罪惡，帶給世人無限的新希望！",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><path d="M50,15 L50,65 M30,35 L70,35" stroke="#ec4899" stroke-width="6"/></svg>`
+      },
+      {
+        text: "復活節最具代表性的象徵物，就是彩色的「復活蛋」和活潑可愛的「復活兔」。",
+        answer: true,
+        category: "復活節象徵",
+        tip: "沒錯！復活蛋代表孕育新生命，復活兔代表生機勃勃，都是象徵復活與新生。",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><ellipse cx="50" cy="45" rx="18" ry="25" fill="#ec4899"/></svg>`
+      },
+      {
+        text: "我們國家的國旗是「五星紅旗」，旗面為紅色，左上方有五顆黃色的星星。",
+        answer: true,
+        category: "國旗常識",
+        tip: "答對了！五星紅旗象徵國家尊嚴，紅色旗面、黃色五角星代表著我們莊嚴的祖國！",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><rect width="100" height="80" fill="#de2910"/></svg>`
+      },
+      {
+        text: "五星紅旗的左上方，是由四顆一樣大的巨型黃色星星並排組成的。",
+        answer: false,
+        category: "國旗常識",
+        tip: "不對！是由「一顆大星星」和「四顆小星星」環繞組成的，代表人民的大團結。",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><rect width="100" height="80" fill="#de2910"/></svg>`
+      },
+      {
+        text: "我們國家的國徽是正方形的，裏面只有一架高鐵和一片黃色的麥田。",
+        answer: false,
+        category: "國徽常識",
+        tip: "不對喔！國徽是「圓形」的。圖案包含了國旗、天安門、齒輪和麥稻，十分莊嚴神聖。",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><circle cx="50" cy="40" r="30" fill="#de2910" stroke="#ffde00" stroke-width="3"/></svg>`
+      },
+      {
+        text: "國徽上最下方代表工業發展的有一齒一齒花樣的輪子，我們叫它做「齒輪」。",
+        answer: true,
+        category: "國徽圖案象徵",
+        tip: "答對了！齒輪象徵工業，周圍的麥穗、稻穗象徵農業，展現國家各行各業勤勞團結。",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><circle cx="50" cy="40" r="20" fill="#ffde00"/></svg>`
+      },
+      {
+        text: "我們中華人民共和國的國歌名字叫做《義勇軍進行曲》。",
+        answer: true,
+        category: "國歌常識",
+        tip: "答對了！這首威武、振奮人心的軍樂曲就是我們的國歌，代表著國家的團結奮鬥精神。",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><rect width="100" height="80" fill="#ecfdf5" rx="12" stroke="#10b981" stroke-width="3"/></svg>`
+      },
+      {
+        text: "在莊嚴的升國旗、奏唱國歌儀式中，我們應當站直身體、雙眼看著國旗，這叫「注目肅立」。",
+        answer: true,
+        category: "升旗禮儀規範",
+        tip: "非常正確！「注目肅立」是我們小一生對國旗、國歌以及國家表達尊重的重要禮儀！",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><rect width="100" height="80" fill="#f1f5f9" rx="12"/></svg>`
+      },
+      {
+        text: "如果有完全不認識的叔叔在門口，說是爸爸派他來接你，叫你趕快開門，你應該立刻開門請他進來並跟他走。",
+        answer: false,
+        category: "提防陌生人安全",
+        tip: "絕對不可以！這是極度危險的行為！必須立刻大聲叫喊家中的大人處理，絶不能自行開門！",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><circle cx="50" cy="40" r="20" fill="#ef4444"/></svg>`
+      },
+      {
+        text: "小一生年紀太小了，在安樂窩裏什麼家務都幫不上忙，所以家裡所有事情全部推給媽媽做就可以了。",
+        answer: false,
+        category: "分工合作責任",
+        tip: "不對喔！小一生也是安樂窩的重要成員，應該主動分擔簡單家務（如摺衣物、收拾自己的玩具），減輕爸媽負擔！",
+        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><circle cx="50" cy="40" r="22" fill="#3b82f6"/></svg>`
+      }
+    ];
+
+    const MATCHING_ITEMS = [
+      { left: "爸爸的爸爸", right: "祖父 (爺爺)", id: 1 },
+      { left: "爸爸的媽媽", right: "祖母 (嫲嫲)", id: 2 },
+      { left: "媽媽的爸爸", right: "外祖父 (公公)", id: 3 },
+      { left: "媽媽的姊妹", right: "姨母 (阿姨)", id: 4 },
+      { left: "端午節食品", right: "吃粽子、划龍舟", id: 5 },
+      { left: "中秋節活動", right: "賞月、玩燈籠", id: 6 },
+      { left: "重陽節習俗", right: "登高、去墓地掃墓", id: 7 },
+      { left: "農曆新年食品", right: "吃年糕與煎堆", id: 8 }
+    ];
+
     const FLASHCARDS = [
       {
         title: "大掃除",
@@ -862,72 +1170,13 @@
       },
       {
         title: "家居安全",
-        category: "我的安樂窩",
+        category: "安樂窩",
         icon: "🧯",
         desc: "保持家居整潔，不做危險行為。不接觸熱水、刀具等危險物品，提防陌生人，不要獨自開門！",
         svg: `<svg viewBox="0 0 100 60" class="w-24 h-16"><path d="M50,10 L15,48 L85,48 Z" fill="#ef4444" stroke="#ffffff" stroke-width="3"/><rect x="47" y="22" width="6" height="15" fill="#ffffff"/><circle cx="50" cy="42" r="3" fill="#ffffff"/></svg>`
       }
     ];
 
-    // --- 是非題數據 ---
-    const TF_QUESTIONS = [
-      {
-        text: "六歲的弟弟在廚房內貪玩撞向正拿著滾燙熱水的媽媽，導致熱水打翻燙傷姐姐。這件事情告訴我們，小朋友絕對不應該在廚房玩耍。",
-        answer: true,
-        category: "安全行為",
-        tip: "沒錯！廚房裡有熱水、刀具、爐火，非常多危險，絕對不是遊戲玩耍的地方！",
-        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><rect width="100" height="80" fill="#fee2e2" rx="12" stroke="#fca5a5" stroke-width="2"/><path d="M50,15 L85,65 L15,65 Z" fill="#ef4444"/><text x="50" y="58" font-size="35" fill="#ffffff" font-weight="bold" text-anchor="middle">!</text></svg>`
-      },
-      {
-        text: "若看到廚房的報紙被爐火燒着（起火），我們應該立即躲在衣櫃裏自己玩玩具，不理會它。",
-        answer: false,
-        category: "安全行為",
-        tip: "起火是非常嚴重的危險！應該大聲呼叫家人，在安全情況下報警，絕不能躲起來。",
-        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><rect width="100" height="80" fill="#fff7ed" rx="12" stroke="#fdba74" stroke-width="2"/><path d="M40,55 C40,40 50,25 50,25 C50,25 60,40 60,55 Z" fill="#ea580c"/><path d="M45,55 C45,45 50,35 50,35 C50,35 55,45 55,55 Z" fill="#f97316"/></svg>`
-      },
-      {
-        text: "當我們遇到煤氣洩漏、火警等非常緊急需要報警求助的情況時，在香港應該撥打「999」求助。",
-        answer: true,
-        category: "緊急求助常識",
-        tip: "沒錯！香港的緊急求助電話是999。但平常沒有緊急事情絕對不可以亂撥！",
-        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><rect width="100" height="80" fill="#ecfdf5" rx="12" stroke="#6ee7b7" stroke-width="2"/><text x="50" y="48" font-size="28" fill="#047857" font-weight="bold" text-anchor="middle">999</text></svg>`
-      },
-      {
-        text: "爸爸媽媽兩邊的親戚常有往來。其中爸爸的姊姊或妹妹，我們應該稱呼為「姨母」。",
-        answer: false,
-        category: "親戚稱謂",
-        tip: "不對喔！爸爸的姊妹我們應該稱呼為「姑母/姑姐」，媽媽的姊妹才稱呼為「姨母」。",
-        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><circle cx="50" cy="40" r="30" fill="#fef08a"/><path d="M40,35 Q50,45 60,35" stroke="#ca8a04" stroke-width="3" fill="none"/><circle cx="42" cy="30" r="3" fill="#ca8a04"/><circle cx="58" cy="30" r="3" fill="#ca8a04"/><rect x="46" y="45" width="8" height="15" fill="#ca8a04"/></svg>`
-      },
-      {
-        text: "在莊嚴的升國旗奏國歌典禮時，大家一定要站直、不說話，注目肅立！",
-        answer: true,
-        category: "尊重國家象徵",
-        tip: "沒錯！升國旗奏國歌是莊嚴的，大家都應當保持安靜，向國旗注目肅立。",
-        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><rect width="100" height="80" fill="#f1f5f9" rx="12" stroke="#cbd5e1" stroke-width="2"/><line x1="50" y1="15" x2="50" y2="65" stroke="#475569" stroke-width="4"/><rect x="50" y="15" width="25" height="18" fill="#ef4444"/></svg>`
-      },
-      {
-        text: "重陽節去山上掃墓，必須在確定所有火種完全熄滅才可以離開，保護大自然！",
-        answer: true,
-        category: "重陽山林防火",
-        tip: "非常正確！火種如果不完全淋熄，風一吹就會引起嚴重的山林火災，十分危險！",
-        svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><rect width="100" height="80" fill="#fff1f2" rx="12" stroke="#fecdd3" stroke-width="2"/><path d="M30,55 L70,55 L50,25 Z" fill="#fda4af"/><path d="M45,55 L55,55 L50,40 Z" fill="#f43f5e"/></svg>`
-      }
-    ];
-
-    // --- 趣味配對數據 ---
-    const MATCHING_ITEMS = [
-      { left: "爸爸的父母 (爺爺嫲嫲)", right: "👵 祖父與祖母", id: 1 },
-      { left: "媽媽的父母 (公公婆婆)", right: "👴 外祖父與外祖母", id: 2 },
-      { left: "媽媽的姊妹 (阿姨)", right: "👩‍🦰 姨母", id: 3 },
-      { left: "端午節紀念偉人", right: "🍙 屈原", id: 4 },
-      { left: "中秋節經典習俗", right: "🌕 吃月餅與賞月", id: 5 },
-      { left: "重陽節經典習俗", right: "⛰️ 登高與掃墓拜祭", id: 6 },
-      { left: "農曆新年必吃食品", right: "🥞 吃年糕與煎堆", id: 7 },
-      { left: "國歌的名字", right: "🎵 《義勇軍進行曲》", id: 8 }
-    ];
-
-    // --- 隨機排序（Fisher-Yates Shuffle） ---
     function shuffleArray(array) {
       const arr = [...array];
       for (let i = arr.length - 1; i > 0; i--) {
@@ -937,10 +1186,12 @@
       return arr;
     }
 
-    // --- 初始化隨機題目 ---
     function initRandomQuestions() {
       randomizedFillQuestions = shuffleArray(FILL_QUESTIONS);
       fillIndex = 0;
+
+      randomizedTFQuestions = shuffleArray(TF_QUESTIONS);
+      tfIndex = 0;
     }
 
     function switchTab(tabId) {
@@ -959,7 +1210,6 @@
       const activeNav = document.getElementById(`nav-${tabId}`);
       activeNav.classList.remove("bg-white", "text-slate-700", "border-slate-100");
       
-      // 給選中的標籤積木加上舒適的粉彩色與軟陰影
       if (tabId === "flashcard") {
         activeNav.classList.add("bg-indigo-50", "text-indigo-600", "border-indigo-200", "soft-card-shadow");
       } else if (tabId === "quiz-fill") {
@@ -987,7 +1237,11 @@
             tip = FILL_QUESTIONS[fillIndex].tip;
           }
         } else if (currentTab === "quiz-tf") {
-          tip = OWL_TIPS["quiz-tf"][tfIndex];
+          if (randomizedTFQuestions.length > 0) {
+            tip = randomizedTFQuestions[tfIndex].tip;
+          } else {
+            tip = TF_QUESTIONS[tfIndex].tip;
+          }
         } else if (currentTab === "quiz-match") {
           tip = OWL_TIPS["quiz-match"][0];
         }
@@ -995,7 +1249,6 @@
 
       document.getElementById("helper-text").innerText = tip;
       
-      // 貓頭鷹博士小動畫
       const box = document.getElementById("helper-box");
       box.classList.add("scale-[1.01]");
       setTimeout(() => {
@@ -1003,23 +1256,20 @@
       }, 300);
     }
 
-    // --- 模式一：知識閃卡 ---
+    // --- 模式一：知識閃卡常規處理 ---
     function renderFlashcard() {
       const data = FLASHCARDS[fcIndex];
       const card = document.getElementById("flashcard-element");
       
       card.classList.remove("flipped");
 
-      // 正面渲染
       document.getElementById("fc-category").innerText = data.category;
       document.getElementById("fc-icon").innerText = data.icon;
       document.getElementById("fc-title").innerText = data.title;
 
-      // 背面渲染
       document.getElementById("fc-back-img").innerHTML = data.svg;
       document.getElementById("fc-desc").innerText = data.desc;
 
-      // 更新進度
       document.getElementById("flashcard-progress").innerText = `${fcIndex + 1} / ${FLASHCARDS.length}`;
       
       updateOwlTip();
@@ -1041,7 +1291,7 @@
     }
 
     function speakFlashcardText(event) {
-      event.stopPropagation(); // 阻止卡片翻面
+      event.stopPropagation();
       const data = FLASHCARDS[fcIndex];
       speakText(`${data.title}。${data.desc}`);
     }
@@ -1051,7 +1301,6 @@
       speakText(data.title);
     }
 
-    // --- 模式二：供詞填充 ---
     function renderFillQuestion() {
       if (randomizedFillQuestions.length === 0) {
         initRandomQuestions();
@@ -1066,20 +1315,17 @@
       const rawText = q.text;
       const bracketRegex = /\[(.*?)\]/g;
       
-      // 建立可交互填充氣泡
       let formattedHtml = rawText.replace(bracketRegex, (match, word) => {
         return `<span id="fill-blank" class="inline-block border-2 border-dashed border-sky-300 bg-sky-50/50 text-sky-700 font-extrabold px-6 py-2 rounded-full min-w-[160px] text-center mx-1.5 shadow-sm cursor-pointer hover:scale-105 active:scale-95 transition-all duration-200 text-2xl">❓ 點擊填入</span>`;
       });
 
       document.getElementById("fill-question-container").innerHTML = formattedHtml;
 
-      // 產生選項按鈕
       const optionsContainer = document.getElementById("fill-options-container");
       optionsContainer.innerHTML = "";
 
       const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
 
-      // 馬卡龍粉彩配色組
       const blockColors = [
         "bg-pink-50 hover:bg-pink-100 border-pink-100 text-pink-700",
         "bg-sky-50 hover:bg-sky-100 border-sky-100 text-sky-700",
@@ -1096,7 +1342,6 @@
         optionsContainer.appendChild(btn);
       });
 
-      // 重置反饋列
       const feedbackBar = document.getElementById("fill-feedback-bar");
       feedbackBar.className = "hidden";
 
@@ -1191,7 +1436,6 @@
 
     function nextFillQuestion() {
       fillIndex++;
-      // 若 41 題全部完成，則重新打亂
       if (fillIndex >= randomizedFillQuestions.length) {
         speakText("你太厲害了！答完了所有溫習題目，我們重新打亂題目再來一次吧！");
         initRandomQuestions();
@@ -1205,11 +1449,13 @@
       speakText(readableText);
     }
 
-    // --- 模式三：是非挑戰處理 ---
     function renderTFQuestion() {
-      const q = TF_QUESTIONS[tfIndex];
+      if (randomizedTFQuestions.length === 0) {
+        initRandomQuestions();
+      }
+      const q = randomizedTFQuestions[tfIndex];
 
-      document.getElementById("tf-progress").innerText = `${tfIndex + 1} / ${TF_QUESTIONS.length}`;
+      document.getElementById("tf-progress").innerText = `${tfIndex + 1} / ${randomizedTFQuestions.length}`;
       document.getElementById("tf-question-text").innerText = q.text;
       document.getElementById("tf-visual-container").innerHTML = q.svg;
 
@@ -1219,8 +1465,13 @@
       updateOwlTip();
     }
 
+    function speakTFQuestion() {
+      const q = randomizedTFQuestions[tfIndex];
+      speakText(q.text);
+    }
+
     function submitTFAnswer(userAns) {
-      const q = TF_QUESTIONS[tfIndex];
+      const q = randomizedTFQuestions[tfIndex];
       const feedbackBar = document.getElementById("tf-feedback-bar");
 
       if (userAns === q.answer) {
@@ -1228,16 +1479,21 @@
         score += 10;
         updateScore();
         triggerSuccessConfetti();
-        speakText("答對了！做得好！");
+        speakText("答對了！");
         updateOwlTip(`答對了！恭喜你！貓頭鷹：${q.tip}`);
 
         feedbackBar.className = "p-3 rounded-2xl text-center text-sm font-black my-2 bg-emerald-50 text-emerald-700 border border-emerald-100 animate-bounce";
-        feedbackBar.innerText = "🎉 恭喜！你答對了！";
+        feedbackBar.innerText = "🎉 恭喜！你答對了！下一題載入中...";
 
+        // 答對自動前進
         setTimeout(() => {
-          tfIndex = (tfIndex + 1) % TF_QUESTIONS.length;
+          tfIndex++;
+          if (tfIndex >= randomizedTFQuestions.length) {
+            speakText("哇！你答完了全部40道是非挑戰題！太厲害了，我們重新打亂再來！");
+            initRandomQuestions();
+          }
           renderTFQuestion();
-        }, 3800);
+        }, 3200);
 
       } else {
         playSound('incorrect');
@@ -1256,7 +1512,6 @@
       }
     }
 
-    // --- 模式四：配對連線處理 ---
     function renderMatchingBoard() {
       selectedLeftId = null;
       selectedRightId = null;
@@ -1268,7 +1523,6 @@
       matchLeftCol.innerHTML = "";
       matchRightCol.innerHTML = "";
 
-      // 隨機混淆左、右兩邊的題目與答案
       const leftItems = [...MATCHING_ITEMS].sort(() => Math.random() - 0.5);
       const rightItems = [...MATCHING_ITEMS].sort(() => Math.random() - 0.5);
 
@@ -1364,7 +1618,6 @@
           const matchedId = selectedLeftId;
           matchedPairs.push(matchedId);
 
-          // 成功拼合的翡翠綠拼圖卡片樣式
           leftBtn.className = "puzzle-left w-full text-left bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 text-emerald-700 font-bold p-4 rounded-2xl shadow-inner cursor-default pointer-events-none transform scale-98 transition-all duration-300";
           leftBtn.querySelector("i").className = "fa-solid fa-circle-check text-emerald-500 text-lg";
 
@@ -1390,7 +1643,6 @@
 
         } else {
           playSound('incorrect');
-          // 拼裝失敗：閃紅光與搖晃
           leftBtn.className = "puzzle-left w-full text-left bg-gradient-to-r from-rose-50 to-red-50 border border-rose-200 text-rose-700 font-bold p-4 rounded-2xl shadow-sm animate-shake";
           rightBtn.className = "puzzle-right w-full text-right bg-gradient-to-l from-rose-50 to-red-50 border border-rose-200 text-rose-700 font-bold p-4 rounded-2xl shadow-sm animate-shake";
 
@@ -1426,7 +1678,7 @@
       renderMatchingBoard();
     }
 
-    // --- 通用工具 ---
+    // --- 通用得分與特效 ---
     function updateScore() {
       document.getElementById("score-display").innerText = score;
     }
@@ -1439,9 +1691,7 @@
       });
     }
 
-    // --- 設定 window.onload 起始載入程序 ---
     window.onload = function() {
-      // 優先初始化隨機填充題庫
       initRandomQuestions();
 
       switchTab("flashcard");
@@ -1450,7 +1700,6 @@
       renderTFQuestion();
       renderMatchingBoard();
       
-      // 親切語音歡迎
       setTimeout(() => {
         speakText("小朋友你好！我是貓頭鷹博士。讓我們一起快樂地溫習人文科吧！🦉");
       }, 700);
