@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>小一人文科溫習大冒險</title>
+  <title>真道書院小一人文科溫習大冒險</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts for Playful and Readable text -->
@@ -24,7 +24,7 @@
       font-weight: 900;
     }
     
-    /* 改用柔和粉彩卡片陰影與無黑邊的溫和設計 */
+    /* 柔和粉彩卡片陰影與無黑邊的溫和設計 */
     .soft-card-shadow {
       box-shadow: 0 10px 25px -5px rgba(148, 163, 184, 0.15), 0 8px 16px -6px rgba(148, 163, 184, 0.1);
     }
@@ -79,7 +79,7 @@
       animation-iteration-count: 2;
     }
 
-    /* 拼圖形狀模擬（改用粉嫩色彩連接點，捨棄粗黑邊） */
+    /* 拼圖形狀模擬 */
     .puzzle-left {
       position: relative;
       border-top-right-radius: 0px;
@@ -149,7 +149,7 @@
       <div class="inline-block w-full bg-gradient-to-r from-pink-100 via-sky-100 to-emerald-100 p-1.5 rounded-[32px] soft-card-shadow">
         <div class="bg-white px-8 py-6 rounded-[26px] flex flex-col items-center">
           <h1 class="text-3xl sm:text-5xl font-black playful-title tracking-wider text-sky-600 flex items-center gap-3 justify-center animate-float">
-            <span>🎈</span> 小一人文大冒險 <span class="text-2xl sm:text-3xl text-amber-400">⭐</span>
+            <span>🎈</span> 真道人文大冒險 <span class="text-2xl sm:text-3xl text-amber-400">⭐</span>
           </h1>
           <p class="text-xs sm:text-sm font-black text-slate-400 mt-2 tracking-wide uppercase">
             第二次總結性評估（單元三、四、五）繽紛天地溫習教材
@@ -163,23 +163,27 @@
   <!-- 主要學習區域 -->
   <main class="max-w-4xl w-full mx-auto p-4 flex-grow flex flex-col gap-5">
 
-    <!-- 學習模式導航（字體大幅放大且加粗） -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-3.5">
-      <button onclick="switchTab('flashcard')" id="nav-flashcard" class="tab-btn hover:scale-[1.03] bg-white text-slate-700 font-black p-4 md:p-5 rounded-3xl border border-slate-100 soft-card-shadow flex flex-col items-center gap-2 transition-all">
-        <span class="text-3xl md:text-4xl">💡</span>
-        <span class="text-base md:text-lg lg:text-xl tracking-wider">知識閃卡</span>
+    <!-- 學習模式導航（字體大幅放大且加粗，升級為5個欄位） -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3.5">
+      <button onclick="switchTab('flashcard')" id="nav-flashcard" class="tab-btn hover:scale-[1.03] bg-white text-slate-700 font-black p-4 rounded-3xl border border-slate-100 soft-card-shadow flex flex-col items-center gap-2 transition-all">
+        <span class="text-3xl">💡</span>
+        <span class="text-sm md:text-base tracking-wider">知識閃卡</span>
       </button>
-      <button onclick="switchTab('quiz-fill')" id="nav-quiz-fill" class="tab-btn hover:scale-[1.03] bg-white text-slate-700 font-black p-4 md:p-5 rounded-3xl border border-slate-100 soft-card-shadow flex flex-col items-center gap-2 transition-all">
-        <span class="text-3xl md:text-4xl">📝</span>
-        <span class="text-base md:text-lg lg:text-xl tracking-wider">供詞填充</span>
+      <button onclick="switchTab('family-tree')" id="nav-family-tree" class="tab-btn hover:scale-[1.03] bg-white text-slate-700 font-black p-4 rounded-3xl border border-slate-100 soft-card-shadow flex flex-col items-center gap-2 transition-all">
+        <span class="text-3xl">👪</span>
+        <span class="text-sm md:text-base tracking-wider">家庭關係</span>
       </button>
-      <button onclick="switchTab('quiz-tf')" id="nav-quiz-tf" class="tab-btn hover:scale-[1.03] bg-white text-slate-700 font-black p-4 md:p-5 rounded-3xl border border-slate-100 soft-card-shadow flex flex-col items-center gap-2 transition-all">
-        <span class="text-3xl md:text-4xl">❓</span>
-        <span class="text-base md:text-lg lg:text-xl tracking-wider">是非挑戰</span>
+      <button onclick="switchTab('quiz-fill')" id="nav-quiz-fill" class="tab-btn hover:scale-[1.03] bg-white text-slate-700 font-black p-4 rounded-3xl border border-slate-100 soft-card-shadow flex flex-col items-center gap-2 transition-all">
+        <span class="text-3xl">📝</span>
+        <span class="text-sm md:text-base tracking-wider">供詞填充</span>
       </button>
-      <button onclick="switchTab('quiz-match')" id="nav-quiz-match" class="tab-btn hover:scale-[1.03] bg-white text-slate-700 font-black p-4 md:p-5 rounded-3xl border border-slate-100 soft-card-shadow flex flex-col items-center gap-2 transition-all">
-        <span class="text-3xl md:text-4xl">🧩</span>
-        <span class="text-base md:text-lg lg:text-xl tracking-wider">趣味配對</span>
+      <button onclick="switchTab('quiz-tf')" id="nav-quiz-tf" class="tab-btn hover:scale-[1.03] bg-white text-slate-700 font-black p-4 rounded-3xl border border-slate-100 soft-card-shadow flex flex-col items-center gap-2 transition-all">
+        <span class="text-3xl">❓</span>
+        <span class="text-sm md:text-base tracking-wider">是非挑戰</span>
+      </button>
+      <button onclick="switchTab('quiz-match')" id="nav-quiz-match" class="tab-btn hover:scale-[1.03] bg-white text-slate-700 font-black p-4 rounded-3xl border border-slate-100 soft-card-shadow flex flex-col items-center gap-2 transition-all">
+        <span class="text-3xl">🧩</span>
+        <span class="text-sm md:text-base tracking-wider">趣味配對</span>
       </button>
     </div>
 
@@ -246,6 +250,221 @@
         </div>
       </div>
 
+      <!-- 家庭關係圖與兒歌溫習 -->
+      <div id="tab-family-tree" class="tab-content hidden flex-col justify-between h-full gap-6">
+        <div>
+          <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
+            <h2 class="text-xl md:text-2xl font-black text-emerald-600 flex items-center gap-2 playful-title">
+              <span>👪</span> 家庭關係關係樹與兒歌溫習
+            </h2>
+            <div class="flex gap-2">
+              <button onclick="showFamilySubTab('tree')" id="btn-sub-tree" class="bg-emerald-100 text-emerald-800 font-bold px-3 py-1.5 rounded-xl text-xs transition">🌳 關係家庭樹</button>
+              <button onclick="showFamilySubTab('video')" id="btn-sub-video" class="bg-slate-100 text-slate-700 font-bold px-3 py-1.5 rounded-xl text-xs transition">📺 兒歌影音</button>
+              <button onclick="showFamilySubTab('quiz')" id="btn-sub-quiz" class="bg-slate-100 text-slate-700 font-bold px-3 py-1.5 rounded-xl text-xs transition">✍️ 5題小測</button>
+            </div>
+          </div>
+          <p class="text-xs text-slate-400 mb-4 font-bold">小一常識必學！點擊各個關係卡片可以聽清楚發音。藍色代表爸爸家，紅色代表媽媽家！</p>
+
+          <!-- 子頁面 1: 雙欄分類家庭樹 -->
+          <div id="family-sub-tree" class="family-sub-content grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50/50 p-4 rounded-3xl border border-slate-100">
+            
+            <!-- 爸爸那邊的親戚 (藍色系家族) -->
+            <div class="flex flex-col gap-4 bg-sky-50/30 p-4 rounded-2xl border border-sky-100 soft-card-shadow">
+              <h3 class="text-base font-black text-sky-700 flex items-center gap-2 border-b border-sky-100 pb-2">
+                <span>👴🔵</span> 爸爸那邊的親戚 (Paternal Family)
+              </h3>
+              
+              <!-- 祖輩 -->
+              <div class="flex flex-col gap-1.5">
+                <span class="text-[10px] text-sky-500 font-black uppercase tracking-wider">第一代：祖輩</span>
+                <div class="grid grid-cols-2 gap-2">
+                  <button onclick="speakRelation('爸爸的爸爸稱為祖父，廣東話通常叫爺爺。')" class="bg-sky-50 hover:bg-sky-100/80 p-3 rounded-xl text-center border border-sky-100 transition shadow-sm">
+                    <span class="text-2xl block mb-0.5">👴</span>
+                    <span class="block text-[10px] text-sky-400 font-bold">爸爸的爸爸</span>
+                    <span class="text-sm font-black text-sky-700">祖父 (爺爺)</span>
+                  </button>
+                  <button onclick="speakRelation('爸爸的媽媽稱為祖母，廣東話通常叫嫲嫲。')" class="bg-sky-50 hover:bg-sky-100/80 p-3 rounded-xl text-center border border-sky-100 transition shadow-sm">
+                    <span class="text-2xl block mb-0.5">👵</span>
+                    <span class="block text-[10px] text-sky-400 font-bold">爸爸的媽媽</span>
+                    <span class="text-sm font-black text-sky-700">祖母 (嫲嫲)</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- 中間連結虛線 -->
+              <div class="flex justify-center my-0.5"><div class="border-l-2 border-dashed border-sky-200 h-4"></div></div>
+
+              <!-- 父輩 -->
+              <div class="flex flex-col gap-1.5">
+                <span class="text-[10px] text-sky-500 font-black uppercase tracking-wider">第二代：父輩</span>
+                <div class="grid grid-cols-3 gap-2">
+                  <button onclick="speakRelation('爸爸的哥哥稱為伯父，廣東話可以叫伯伯。')" class="bg-sky-50 hover:bg-sky-100/80 p-2.5 rounded-xl text-center border border-sky-100 transition shadow-sm">
+                    <span class="text-xl block mb-0.5">👨</span>
+                    <span class="block text-[9px] text-sky-400 font-bold">爸爸的哥哥</span>
+                    <span class="text-xs font-black text-sky-700 leading-tight">伯父 (伯伯)</span>
+                  </button>
+                  <button onclick="speakRelation('爸爸的弟弟稱為叔叔。')" class="bg-sky-50 hover:bg-sky-100/80 p-2.5 rounded-xl text-center border border-sky-100 transition shadow-sm">
+                    <span class="text-xl block mb-0.5">👦</span>
+                    <span class="block text-[9px] text-sky-400 font-bold">爸爸的弟弟</span>
+                    <span class="text-xs font-black text-sky-700">叔叔</span>
+                  </button>
+                  <button onclick="speakRelation('爸爸的姊妹稱為姑母，廣東話通常叫姑姐。')" class="bg-sky-50 hover:bg-sky-100/80 p-2.5 rounded-xl text-center border border-sky-100 transition shadow-sm">
+                    <span class="text-xl block mb-0.5">👩</span>
+                    <span class="block text-[9px] text-sky-400 font-bold">爸爸的姊妹</span>
+                    <span class="text-xs font-black text-sky-700 leading-tight">姑母 (姑姐)</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- 中間連結虛線 -->
+              <div class="flex justify-center my-0.5"><div class="border-l-2 border-dashed border-sky-200 h-4"></div></div>
+
+              <!-- 同輩 -->
+              <div class="flex flex-col gap-1.5">
+                <span class="text-[10px] text-sky-500 font-black uppercase tracking-wider">第三代：堂同輩 (叔伯的兒女)</span>
+                <div class="grid grid-cols-1 gap-2">
+                  <button onclick="speakRelation('爸爸兄弟，例如伯父或叔叔的女兒叫堂姊妹，兒子叫堂兄弟。親如兄弟姊妹！')" class="bg-sky-100/50 hover:bg-sky-100 p-3 rounded-xl border border-sky-200 transition shadow-sm flex items-center justify-center gap-3">
+                    <span class="text-2xl">👧👦</span>
+                    <div class="text-left">
+                      <span class="block text-[9px] text-sky-500 font-black">【重要！】伯父/叔叔的子女</span>
+                      <span class="text-sm font-black text-sky-800">堂兄弟姊妹 (伯父女兒叫堂姊妹)</span>
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- 媽媽那邊的親戚 (紅色系家族) -->
+            <div class="flex flex-col gap-4 bg-rose-50/30 p-4 rounded-2xl border border-rose-100 soft-card-shadow">
+              <h3 class="text-base font-black text-rose-700 flex items-center gap-2 border-b border-rose-100 pb-2">
+                <span>👵🔴</span> 媽媽那邊的親戚 (Maternal Family)
+              </h3>
+              
+              <!-- 祖輩 -->
+              <div class="flex flex-col gap-1.5">
+                <span class="text-[10px] text-rose-500 font-black uppercase tracking-wider">第一代：外祖輩</span>
+                <div class="grid grid-cols-2 gap-2">
+                  <button onclick="speakRelation('媽媽的爸爸稱為外祖父，廣東話通常叫公公。')" class="bg-rose-50 hover:bg-rose-100/80 p-3 rounded-xl text-center border border-rose-100 transition shadow-sm">
+                    <span class="text-2xl block mb-0.5">👴</span>
+                    <span class="block text-[10px] text-rose-400 font-bold">媽媽的爸爸</span>
+                    <span class="text-sm font-black text-rose-700">外祖父 (公公)</span>
+                  </button>
+                  <button onclick="speakRelation('媽媽的媽媽稱為外祖母，廣東話通常叫婆婆。')" class="bg-rose-50 hover:bg-rose-100/80 p-3 rounded-xl text-center border border-rose-100 transition shadow-sm">
+                    <span class="text-2xl block mb-0.5">👵</span>
+                    <span class="block text-[10px] text-rose-400 font-bold">媽媽的媽媽</span>
+                    <span class="text-sm font-black text-rose-700">外祖母 (婆婆)</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- 中間連結虛線 -->
+              <div class="flex justify-center my-0.5"><div class="border-l-2 border-dashed border-rose-200 h-4"></div></div>
+
+              <!-- 母輩 -->
+              <div class="flex flex-col gap-1.5">
+                <span class="text-[10px] text-rose-500 font-black uppercase tracking-wider">第二代：母輩</span>
+                <div class="grid grid-cols-2 gap-2">
+                  <button onclick="speakRelation('媽媽的兄弟稱為舅父。')" class="bg-rose-50 hover:bg-rose-100/80 p-2.5 rounded-xl text-center border border-rose-100 transition shadow-sm">
+                    <span class="text-xl block mb-0.5">👨</span>
+                    <span class="block text-[9px] text-rose-400 font-bold">媽媽的兄弟</span>
+                    <span class="text-xs font-black text-rose-700">舅父</span>
+                  </button>
+                  <button onclick="speakRelation('媽媽的姊妹稱為姨母，廣東話通常叫阿姨。')" class="bg-rose-50 hover:bg-rose-100/80 p-2.5 rounded-xl text-center border border-rose-100 transition shadow-sm">
+                    <span class="text-xl block mb-0.5">👩</span>
+                    <span class="block text-[9px] text-rose-400 font-bold">媽媽的姊妹</span>
+                    <span class="text-xs font-black text-rose-700">姨母 (阿姨)</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- 中間連結虛線 -->
+              <div class="flex justify-center my-0.5"><div class="border-l-2 border-dashed border-rose-200 h-4"></div></div>
+
+              <!-- 同輩 -->
+              <div class="flex flex-col gap-1.5">
+                <span class="text-[10px] text-rose-500 font-black uppercase tracking-wider">第三代：表同輩 (舅父或姨母兒女)</span>
+                <div class="grid grid-cols-1 gap-2">
+                  <button onclick="speakRelation('媽媽兄弟姊妹，例如舅父或阿姨的兒女跟我們是表關係，兒子叫表兄弟，女兒叫表姊妹！')" class="bg-rose-100/50 hover:bg-rose-100 p-3 rounded-xl border border-rose-200 transition shadow-sm flex items-center justify-center gap-3">
+                    <span class="text-2xl">👦👧</span>
+                    <div class="text-left">
+                      <span class="block text-[9px] text-rose-500 font-black">【重要！】舅父/阿姨的子女</span>
+                      <span class="text-sm font-black text-rose-800">表兄弟姊妹 (舅父兒子叫表兄弟)</span>
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- 子頁面 2: 兒歌影音 -->
+          <div id="family-sub-video" class="family-sub-content hidden flex flex-col gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <!-- Video 1 -->
+              <div class="bg-white p-3 rounded-2xl border border-slate-100 soft-card-shadow flex flex-col justify-between">
+                <div>
+                  <span class="text-xs bg-red-100 text-red-700 px-2 py-1 rounded-md font-bold block w-max mb-1">🎥 兒歌影片 1</span>
+                  <h4 class="font-bold text-sm text-slate-700 mb-2">親戚稱呼歌 - 爸爸篇/媽媽篇</h4>
+                </div>
+                <div class="aspect-video w-full rounded-xl overflow-hidden bg-slate-100 border border-slate-200">
+                  <iframe class="w-full h-full" src="https://www.youtube.com/embed/exooiR6OWfw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                </div>
+                <a href="https://youtu.be/exooiR6OWfw?si=tCjRw9Dcr6uCvvM7" target="_blank" class="mt-2 text-xs text-sky-500 hover:underline font-bold block text-center">👉 外部打開影片連結</a>
+              </div>
+
+              <!-- Video 2 -->
+              <div class="bg-white p-3 rounded-2xl border border-slate-100 soft-card-shadow flex flex-col justify-between">
+                <div>
+                  <span class="text-xs bg-red-100 text-red-700 px-2 py-1 rounded-md font-bold block w-max mb-1">🎥 兒歌影片 2</span>
+                  <h4 class="font-bold text-sm text-slate-700 mb-2">家族稱呼歌 - 小朋友家族溫習</h4>
+                </div>
+                <div class="aspect-video w-full rounded-xl overflow-hidden bg-slate-100 border border-slate-200">
+                  <iframe class="w-full h-full" src="https://www.youtube.com/embed/tPFJJbabo0E" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                </div>
+                <a href="https://youtu.be/tPFJJbabo0E?si=iIgieBXJSrDxs-lo" target="_blank" class="mt-2 text-xs text-sky-500 hover:underline font-bold block text-center">👉 外部打開影片連結</a>
+              </div>
+
+              <!-- Video 3 -->
+              <div class="bg-white p-3 rounded-2xl border border-slate-100 soft-card-shadow flex flex-col justify-between">
+                <div>
+                  <span class="text-xs bg-red-100 text-red-700 px-2 py-1 rounded-md font-bold block w-max mb-1">🎥 兒歌影片 3</span>
+                  <h4 class="font-bold text-sm text-slate-700 mb-2">親戚關係關係稱呼大考驗</h4>
+                </div>
+                <div class="aspect-video w-full rounded-xl overflow-hidden bg-slate-100 border border-slate-200">
+                  <iframe class="w-full h-full" src="https://www.youtube.com/embed/AnmNAXKQ6FE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                </div>
+                <a href="https://youtu.be/AnmNAXKQ6FE?si=GE9zZVLF1Wsp78qF" target="_blank" class="mt-2 text-xs text-sky-500 hover:underline font-bold block text-center">👉 外部打開影片連結</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 子頁面 3: 5題小測 -->
+          <div id="family-sub-quiz" class="family-sub-content hidden flex flex-col gap-4">
+            <div class="bg-emerald-50/50 p-4 rounded-3xl border border-emerald-100">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-black bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-lg">家庭稱謂小測試</span>
+                <span class="text-sm font-bold text-emerald-700" id="family-quiz-progress">第 1 / 5 題</span>
+              </div>
+              <p class="text-2xl sm:text-3xl font-black text-slate-700 text-center my-4 leading-relaxed" id="family-quiz-question-text">
+                加載中...
+              </p>
+              
+              <!-- 選擇選項 -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="family-quiz-options-container">
+                <!-- 動態按鈕 -->
+              </div>
+            </div>
+            <div id="family-quiz-feedback-bar" class="hidden p-3 rounded-2xl text-center text-sm font-black my-1 soft-feedback-shadow"></div>
+          </div>
+
+        </div>
+        <div class="border-t border-slate-100 pt-4 mt-auto">
+          <p class="text-xs text-slate-400 font-bold">提示：點選上方的「關係家庭樹」、「兒歌影音」或「5題小測」標籤，可隨時自由複習親戚關係！</p>
+        </div>
+      </div>
+
       <!-- 供詞填充內容 -->
       <div id="tab-quiz-fill" class="tab-content hidden flex-col justify-between h-full gap-4">
         <div>
@@ -306,7 +525,7 @@
           <p class="text-xs text-slate-400 mb-3 font-bold">小一常識題！判斷以下行為在生活中是「正確/安全」還是「錯誤/危險」！</p>
 
           <!-- 聽讀題目列 -->
-          <div class="bg-emerald-50/50 p-3 rounded-2xl border border-emerald-100 text-xs text-emerald-800 font-black mb-4 flex items-center justify-between">
+          <div class="bg-emerald-50/50 p-3 rounded-2xl border-emerald-100 text-xs text-emerald-800 font-black mb-4 flex items-center justify-between">
             <span id="tf-topic" class="flex items-center gap-1"><span>💡</span> 主題：生活常識與危機處理</span>
             <button onclick="speakTFQuestion()" class="text-emerald-700 hover:underline flex items-center gap-1 font-bold">
               <i class="fa-solid fa-volume-high"></i> 聽讀是非題目
@@ -318,7 +537,7 @@
             <!-- 動態生成 SVG 示意圖 -->
           </div>
 
-          <!-- 是非題題目文本（字體超大，超級顯眼） -->
+          <!-- 是非題題目文本 -->
           <div class="bg-emerald-50/50 p-6 rounded-3xl border-2 border-emerald-100 text-2xl sm:text-3xl font-extrabold text-slate-700 text-center my-4 leading-relaxed" id="tf-question-text">
             <!-- 題目載入位置 -->
           </div>
@@ -404,8 +623,10 @@
     let fcIndex = 0;
     let fillIndex = 0;
     let tfIndex = 0;
+    let familyQuizIndex = 0;
     let score = 0;
     let currentTab = "flashcard";
+    let currentFamilySubTab = "tree";
 
     // 隨機題庫專用陣列
     let randomizedFillQuestions = [];
@@ -419,6 +640,40 @@
     // 音效模擬變數
     let audioContext = null;
     let isMuted = false;
+
+    // 家庭關係 5 題小測題目
+    const FAMILY_QUIZ_QUESTIONS = [
+      {
+        text: "爸爸的爸爸，我們在常識與家庭稱呼中，應該叫他什麼呢？",
+        options: ["祖父 (爺爺)", "外祖父 (公公)", "伯父"],
+        answer: "祖父 (爺爺)",
+        tip: "沒錯！爸爸的爸爸就是爺爺，在莊嚴的常識稱呼中稱為「祖父」喔！"
+      },
+      {
+        text: "媽媽的姊妹，我們在生活中應該稱呼她為什麼？",
+        options: ["姑母 (姑姐)", "姨母 (阿姨)", "外祖母 (婆婆)"],
+        answer: "姨母 (阿姨)",
+        tip: "答對了！媽媽那邊的姊妹我們親切地叫阿姨，正式稱呼為「姨母」。"
+      },
+      {
+        text: "爸爸的哥哥，我們應該稱呼他為什麼？",
+        options: ["伯父 (伯伯)", "叔叔", "舅父"],
+        answer: "伯父 (伯伯)",
+        tip: "正確！爸爸的哥哥是伯父，弟弟則是叔叔。"
+      },
+      {
+        text: "媽媽的兄弟（例如大舅、小舅），我們應該如何稱呼他？",
+        options: ["叔叔", "舅父", "姑丈"],
+        answer: "舅父",
+        tip: "答對了！媽媽的所有兄弟，我們都親切地稱呼為「舅父」。"
+      },
+      {
+        text: "爸爸的姊妹，我們在家庭生活中應該稱呼她為什麼？",
+        options: ["姑母 (姑姐)", "姨母 (阿姨)", "祖母"],
+        answer: "姑母 (姑姐)",
+        tip: "非常厲害！爸爸的姊妹我們稱呼為姑姐，正式書面稱謂是「姑母」。"
+      }
+    ];
 
     function initAudio() {
       if (!audioContext) {
@@ -492,8 +747,11 @@
         "復活節是外地傳來的節日，紀念耶穌在死後第三天復活，帶來希望！",
         "聖誕節是十二月二十五日，慶祝救主耶穌誕生。大家會高興地唱詩歌！",
         "五星紅旗是我們國家的象徵，看見升國旗時要注目、站好！",
-        "國徽包含齒輪 and 麥穗，天安門和國旗在最上方，代表我們莊嚴的祖國！",
-        "安全使用能源，遠離廚房和燙手物品。不輕易給陌生人開門！"
+        "國徽包含齒輪 和 麥穗，天安門和國旗在最上方，代表我們莊嚴的祖國！",
+        "安全使用能源，遠離廚房 和 燙手物品。不輕易給陌生人開門！"
+      ],
+      "family-tree": [
+        "親戚長輩稱呼多，常複習最聰明！點擊各個繽紛卡片，可以聽讀關係稱謂喔！"
       ],
       "quiz-fill": [
         "想一想，如廁後為了健康與乾淨，蓋上廁板後，我們需要做甚麼？",
@@ -512,7 +770,7 @@
         "如果家裡突然起火，躲在衣櫃裡是否能避開濃煙呢？想一想！",
         "發生火災、有人受傷、或者聞到刺鼻的煤氣味時，應該打哪個緊急電話？",
         "對長輩的稱謂要禮貌且正確：媽媽的姊妹在廣東話稱呼為什麼？",
-        "在莊嚴的學校升旗典禮中，我們應當如何站立，雙眼注視著國旗呢？",
+        "在莊嚴的學校升旗典典中，我們應當如何站立，雙眼注視著國旗呢？",
         "在山上掃墓過後，我們能直接走掉、留下一點點微弱的火苗嗎？"
       ],
       "quiz-match": [
@@ -520,9 +778,10 @@
       ]
     };
 
+    // --- 41 題供詞填充題庫 ---
     const FILL_QUESTIONS = [
       {
-        text: "我們每天生活在一起，互相關心、互相愛護的親密成員，就是我們的 [家人] 。",
+        text: "我們每天生活在一起，關係親密、互相愛護的親密成員，就是我們的 [家人] 。",
         options: ["陌生人", "家人", "鄰居", "老師"],
         topic: "我的親人 🏠",
         level: "第一關",
@@ -810,6 +1069,7 @@
       }
     ];
 
+    // --- 40 題是非挑戰題庫 ---
     const TF_QUESTIONS = [
       {
         text: "六歲的弟弟在廚房內貪玩撞向正拿著滾燙熱水的媽媽，導致熱水打翻燙傷姐姐。這件事情告訴我們，小朋友絕對不應該在廚房玩耍。",
@@ -1081,7 +1341,7 @@
         text: "如果有完全不認識的叔叔在門口，說是爸爸派他來接你，叫你趕快開門，你應該立刻開門請他進來並跟他走。",
         answer: false,
         category: "提防陌生人安全",
-        tip: "絕對不可以！這是極度危險的行為！必須立刻大聲叫喊家中的大人處理，絶不能自行開門！",
+        tip: "絕對不可以！這是極度危險的行為！必須立刻大聲叫喊家中的大人處理，走進屋子，安全第一！",
         svg: `<svg viewBox="0 0 100 80" class="w-32 h-24"><circle cx="50" cy="40" r="20" fill="#ef4444"/></svg>`
       },
       {
@@ -1137,7 +1397,7 @@
         title: "中秋賞月",
         category: "中秋節",
         icon: "🌕",
-        desc: "農曆八月十五是中秋節。一家人一起賞月、吃月餅、吃柚子和玩燈籠，象徵「全家團圓」。",
+        desc: "農曆八月十五是中秋節。一會家人一起賞月、吃月餅、吃柚子和玩燈籠，象徵「全家團圓」。",
         svg: `<svg viewBox="0 0 100 60" class="w-24 h-16"><rect width="100" height="60" fill="#1e1b4b" rx="10"/><circle cx="50" cy="30" r="18" fill="#fef08a"/><circle cx="45" cy="25" r="3" fill="#eab308"/></svg>`
       },
       {
@@ -1212,6 +1472,10 @@
       
       if (tabId === "flashcard") {
         activeNav.classList.add("bg-indigo-50", "text-indigo-600", "border-indigo-200", "soft-card-shadow");
+      } else if (tabId === "family-tree") {
+        activeNav.classList.add("bg-emerald-50", "text-emerald-600", "border-emerald-200", "soft-card-shadow");
+        // 初始化家庭子頁面
+        showFamilySubTab('tree');
       } else if (tabId === "quiz-fill") {
         activeNav.classList.add("bg-amber-50", "text-amber-600", "border-amber-200", "soft-card-shadow");
       } else if (tabId === "quiz-tf") {
@@ -1223,6 +1487,116 @@
       updateOwlTip();
     }
 
+    // --- 👪 家庭關係子分頁控制與TTS功能 ---
+    function showFamilySubTab(subTabId) {
+      currentFamilySubTab = subTabId;
+      document.querySelectorAll(".family-sub-content").forEach(el => el.classList.add("hidden"));
+      
+      // 按鈕配色重置
+      const subButtons = {
+        tree: document.getElementById("btn-sub-tree"),
+        video: document.getElementById("btn-sub-video"),
+        quiz: document.getElementById("btn-sub-quiz")
+      };
+      
+      Object.keys(subButtons).forEach(key => {
+        if(subButtons[key]) {
+          subButtons[key].className = "bg-slate-100 text-slate-700 font-bold px-3 py-1.5 rounded-xl text-xs transition";
+        }
+      });
+
+      // 啟動當前分頁
+      const activeElement = document.getElementById(`family-sub-${subTabId}`);
+      if(activeElement) activeElement.classList.remove("hidden");
+
+      if (subTabId === 'tree') {
+        if(subButtons.tree) subButtons.tree.className = "bg-emerald-100 text-emerald-800 font-bold px-3 py-1.5 rounded-xl text-xs transition ring-2 ring-emerald-200";
+        updateOwlTip("親戚長輩常往來。爸爸的父母叫「祖父祖母」，媽媽的父母叫「外祖父外祖母」喔！點擊左、右進行配對！");
+      } else if (subTabId === 'video') {
+        if(subButtons.video) subButtons.video.className = "bg-red-100 text-red-800 font-bold px-3 py-1.5 rounded-xl text-xs transition ring-2 ring-red-200";
+        updateOwlTip("讓我們看三首超好聽的家庭稱呼兒歌，一邊聽歌、一邊快樂地溫習常識關係吧！📺🎶");
+      } else if (subTabId === 'quiz') {
+        if(subButtons.quiz) subButtons.quiz.className = "bg-teal-100 text-teal-800 font-bold px-3 py-1.5 rounded-xl text-xs transition ring-2 ring-teal-200";
+        familyQuizIndex = 0;
+        renderFamilyQuiz();
+      }
+    }
+
+    function speakRelation(text) {
+      speakText(text);
+      updateOwlTip(text);
+    }
+
+    // --- 👪 家庭關係 5 題小測邏輯 ---
+    function renderFamilyQuiz() {
+      const q = FAMILY_QUIZ_QUESTIONS[familyQuizIndex];
+      document.getElementById("family-quiz-progress").innerText = `第 ${familyQuizIndex + 1} / 5 題`;
+      document.getElementById("family-quiz-question-text").innerText = q.text;
+
+      const optionsContainer = document.getElementById("family-quiz-options-container");
+      optionsContainer.innerHTML = "";
+
+      // 繽紛按鈕色系
+      const blockColors = [
+        "bg-pink-50 hover:bg-pink-100 border-pink-100 text-pink-700",
+        "bg-sky-50 hover:bg-sky-100 border-sky-100 text-sky-700",
+        "bg-emerald-50 hover:bg-emerald-100 border-emerald-100 text-emerald-700"
+      ];
+
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        const colorClass = blockColors[idx % blockColors.length];
+        btn.className = `w-full text-center hover:scale-[1.03] border font-black text-xl px-4 py-4 rounded-2xl soft-card-shadow transition ${colorClass}`;
+        btn.innerText = opt;
+        btn.onclick = () => selectFamilyQuizOption(opt, btn);
+        optionsContainer.appendChild(btn);
+      });
+
+      const feedbackBar = document.getElementById("family-quiz-feedback-bar");
+      feedbackBar.className = "hidden";
+      updateOwlTip("選出正確關係答案，答對有煙火大驚喜喔！🦉");
+    }
+
+    function selectFamilyQuizOption(value, btnElement) {
+      const q = FAMILY_QUIZ_QUESTIONS[familyQuizIndex];
+      const feedbackBar = document.getElementById("family-quiz-feedback-bar");
+
+      if (value === q.answer) {
+        playSound('correct');
+        score += 20;
+        updateScore();
+        triggerSuccessConfetti();
+        speakText("答對了！");
+        updateOwlTip(`答對了！${q.tip}`);
+
+        btnElement.className = "w-full text-center border font-black text-xl px-4 py-4 rounded-2xl soft-card-shadow bg-emerald-400 text-white transition";
+        feedbackBar.className = "p-3 rounded-2xl text-center text-sm font-black my-2 bg-emerald-50 text-emerald-700 border border-emerald-100 animate-bounce";
+        feedbackBar.innerText = "🎉 答對了！太厲害了！自動加載下一題中...";
+
+        // 答對後自動在 2 秒後跳到下一題
+        setTimeout(() => {
+          familyQuizIndex++;
+          if (familyQuizIndex >= FAMILY_QUIZ_QUESTIONS.length) {
+            triggerSuccessConfetti();
+            speakText("哇！你答完了全部家庭關係測試，你真是一個聰明的孩子！");
+            updateOwlTip("恭喜你！完成了全部家庭關係小測試！可以點選上方別的欄位繼續複習喔！🦉🌟");
+            // 回到關係圖
+            showFamilySubTab('tree');
+          } else {
+            renderFamilyQuiz();
+          }
+        }, 2500);
+
+      } else {
+        playSound('incorrect');
+        speakText("唔對，再試下！");
+        btnElement.className = "w-full text-center border font-black text-xl px-4 py-4 rounded-2xl soft-card-shadow bg-rose-400 text-white animate-shake transition";
+        feedbackBar.className = "p-3 rounded-2xl text-center text-sm font-black my-2 bg-rose-50 text-rose-700 border border-rose-100 animate-shake";
+        feedbackBar.innerText = "❌ 不對喔，請再試試看！";
+        updateOwlTip("沒關係，再想一想稱謂，你一定可以答對的！🦉");
+      }
+    }
+
     function updateOwlTip(specificText = null) {
       let tip = "";
       if (specificText) {
@@ -1230,6 +1604,8 @@
       } else {
         if (currentTab === "flashcard") {
           tip = OWL_TIPS.flashcard[fcIndex % OWL_TIPS.flashcard.length];
+        } else if (currentTab === "family-tree") {
+          tip = OWL_TIPS["family-tree"][0];
         } else if (currentTab === "quiz-fill") {
           if (randomizedFillQuestions.length > 0) {
             tip = randomizedFillQuestions[fillIndex].tip;
@@ -1301,6 +1677,7 @@
       speakText(data.title);
     }
 
+    // --- 模式二：供詞填充常規處理 ---
     function renderFillQuestion() {
       if (randomizedFillQuestions.length === 0) {
         initRandomQuestions();
@@ -1449,6 +1826,7 @@
       speakText(readableText);
     }
 
+    // --- 模式三：是非挑戰常規處理 ---
     function renderTFQuestion() {
       if (randomizedTFQuestions.length === 0) {
         initRandomQuestions();
@@ -1512,6 +1890,7 @@
       }
     }
 
+    // --- 模式四：趣味配對連連看處理 ---
     function renderMatchingBoard() {
       selectedLeftId = null;
       selectedRightId = null;
